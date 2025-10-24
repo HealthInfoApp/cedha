@@ -6,7 +6,7 @@ export async function GET() {
     const result = await initDatabase();
     
     return NextResponse.json({
-      success: true,
+      initialized: true,
       message: 'Database initialized successfully',
       ...result
     });
@@ -16,7 +16,7 @@ export async function GET() {
     
     return NextResponse.json(
       { 
-        success: false,
+        initialized: false,
         error: 'Database initialization failed',
         message: error.message,
         timestamp: new Date().toISOString(),

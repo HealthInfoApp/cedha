@@ -1,8 +1,17 @@
 import connection from './db';
+import { checkDatabaseHealth } from './dbHealth';
 
 export async function initDatabase() {
   try {
-    // Create users table with new fields
+    // Check database connection first
+    const health = await checkDatabaseHealth();
+    if (!health.healthy) {
+      throw new Error(`Database connection failed: ${health.error}`);
+    }
+
+    console.log('✅ Database connection verified');
+
+    // Create users table
     await connection.execute(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -18,7 +27,8 @@ export async function initDatabase() {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         INDEX idx_email (email),
         INDEX idx_user_type (user_type),
-        INDEX idx_is_active (is_active)
+        INDEX idx_is_active (is_active),
+        INDEX idx_phone_number (phone_number)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
 
@@ -83,13 +93,17 @@ export async function initDatabase() {
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         INDEX idx_conversation_id (conversation_id),
         INDEX idx_user_id (user_id),
-        INDEX idx_created_at (created_at)
+        INDEX idx_created_at (created_at),
+        INDEX idx_is_user_message (is_user_message)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     `);
 
     console.log('✅ All database tables created/verified successfully');
     
-    return { success: true, message: 'Database initialized successfully' };
+    return { 
+      status: 'success',
+      tables: ['users', 'user_sessions', 'textbooks', 'chat_conversations', 'chat_messages']
+    };
   } catch (error) {
     console.error('❌ Database initialization failed:', error);
     throw error;
