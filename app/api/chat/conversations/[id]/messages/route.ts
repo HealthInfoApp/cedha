@@ -4,7 +4,7 @@ import connection from '@/lib/db';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.cookies.get('token')?.value;
@@ -13,7 +13,7 @@ export async function GET(
     }
 
     const decoded = verifyToken(token);
-    const conversationId = params.id;
+    const { id: conversationId } = await params;
 
     // Verify user owns this conversation
     const [conversations] = await connection.execute(
@@ -54,7 +54,7 @@ export async function GET(
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const token = request.cookies.get('token')?.value;
@@ -63,7 +63,7 @@ export async function POST(
     }
 
     const decoded = verifyToken(token);
-    const conversationId = params.id;
+    const { id: conversationId } = await params;
     const { message } = await request.json();
 
     if (!message?.trim()) {
