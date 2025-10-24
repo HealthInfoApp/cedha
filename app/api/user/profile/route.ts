@@ -24,9 +24,10 @@ export async function PUT(request: NextRequest) {
       [full_name.trim(), phone_number?.trim() || null, specialization?.trim() || null, decoded.userId]
     );
 
-    // Get updated user data
+    // Get updated user data with created_at
     const [users] = await connection.execute(
-      `SELECT id, email, full_name, user_type, specialization, phone_number, profile_image, created_at 
+      `SELECT id, email, full_name, user_type, specialization, phone_number, 
+              profile_image, is_active, created_at, updated_at 
        FROM users 
        WHERE id = ?`,
       [decoded.userId]

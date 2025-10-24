@@ -11,6 +11,8 @@ interface User {
   specialization?: string;
   phone_number?: string;
   profile_image?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export default function ProfilePage() {

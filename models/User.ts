@@ -8,8 +8,8 @@ export interface User {
   phone_number?: string;
   profile_image?: string;
   is_active: boolean;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string; // Add this line
+  updated_at: string; // Add this line
 }
 
 export interface CreateUserData {

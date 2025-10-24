@@ -50,6 +50,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if user is active
+    if (!user.is_active) {
+      return NextResponse.json(
+        { error: 'Your account has been deactivated. Please contact support.' },
+        { status: 403 }
+      );
+    }
+
     // Generate token
     const token = generateToken(user.id);
 
