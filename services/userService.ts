@@ -20,29 +20,45 @@ export class UserService {
     );
 
     const insertResult = result as any;
-    return this.getUserById(insertResult.insertId);
+    const newUser = await this.getUserById(insertResult.insertId);
+    
+    if (!newUser) {
+      throw new Error('Failed to create user - user not found after insertion');
+    }
+    
+    return newUser;
   }
 
   async getUserByEmail(email: string): Promise<User | null> {
-    const [rows] = await connection.execute(
-      'SELECT * FROM users WHERE email = ?',
-      [email]
-    );
+    try {
+      const [rows] = await connection.execute(
+        'SELECT * FROM users WHERE email = ?',
+        [email]
+      );
 
-    const users = rows as User[];
-    return users.length > 0 ? users[0] : null;
+      const users = rows as User[];
+      return users.length > 0 ? users[0] : null;
+    } catch (error) {
+      console.error('Error getting user by email:', error);
+      return null;
+    }
   }
 
   async getUserById(id: number): Promise<Omit<User, 'password'> | null> {
-    const [rows] = await connection.execute(
-      `SELECT id, email, full_name, user_type, specialization, phone_number, 
-              profile_image, is_active, created_at, updated_at 
-       FROM users WHERE id = ?`,
-      [id]
-    );
+    try {
+      const [rows] = await connection.execute(
+        `SELECT id, email, full_name, user_type, specialization, phone_number, 
+                profile_image, is_active, created_at, updated_at 
+         FROM users WHERE id = ?`,
+        [id]
+      );
 
-    const users = rows as Omit<User, 'password'>[];
-    return users.length > 0 ? users[0] : null;
+      const users = rows as Omit<User, 'password'>[];
+      return users.length > 0 ? users[0] : null;
+    } catch (error) {
+      console.error('Error getting user by id:', error);
+      return null;
+    }
   }
 
   async verifyUserCredentials(email: string, password: string): Promise<User | null> {
@@ -87,12 +103,17 @@ export class UserService {
 
     updateValues.push(userId);
 
-    await connection.execute(
-      `UPDATE users SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
-      updateValues
-    );
+    try {
+      await connection.execute(
+        `UPDATE users SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+        updateValues
+      );
 
-    return this.getUserById(userId);
+      return this.getUserById(userId);
+    } catch (error) {
+      console.error('Error updating user profile:', error);
+      return null;
+    }
   }
 }
 
