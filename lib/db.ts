@@ -1,11 +1,45 @@
 import mysql from 'mysql2/promise';
-import fs from 'fs';
-import path from 'path';
 
-// Read SSL certificate
-const sslCA = fs.readFileSync(
-  path.resolve(process.env.TIDB_SSL_CA_PATH || './certs/isrgrootx1.pem')
-);
+// For development with file system
+let sslConfig: any = undefined;
+
+if (process.env.NODE_ENV === 'development') {
+  // Only try to use file system in development
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const certPath = process.env.TIDB_SSL_CA_PATH || './certs/isrgrootx1.pem';
+    const fullPath = path.resolve(certPath);
+    
+    if (fs.existsSync(fullPath)) {
+      const sslCA = fs.readFileSync(fullPath);
+      sslConfig = {
+        ca: sslCA,
+        rejectUnauthorized: true,
+      };
+      console.log('✅ SSL certificate loaded for development');
+    } else {
+      console.warn('⚠️ SSL certificate not found, connecting without...');
+    }
+  } catch (error) {
+    console.warn('⚠️ Could not load SSL certificate, connecting without...');
+  }
+} else {
+  // For production (Vercel) - use environment variable or connect without
+  if (process.env.TIDB_SSL_CA_BASE64) {
+    sslConfig = {
+      ca: Buffer.from(process.env.TIDB_SSL_CA_BASE64, 'base64'),
+      rejectUnauthorized: true,
+    };
+    console.log('✅ SSL certificate loaded from base64 for production');
+  } else {
+    // For production without SSL certificate (some providers don't need it)
+    sslConfig = {
+      rejectUnauthorized: false,
+    };
+    console.log('⚠️ Connecting without SSL certificate verification');
+  }
+}
 
 const dbConfig = {
   host: process.env.TIDB_HOST,
@@ -13,15 +47,14 @@ const dbConfig = {
   user: process.env.TIDB_USER,
   password: process.env.TIDB_PASSWORD,
   database: process.env.TIDB_DATABASE,
-  ssl: {
-    ca: sslCA,
-    rejectUnauthorized: true,
-  },
-  // Add connection pool settings for better performance
+  ssl: sslConfig,
+  // Connection pool settings
   connectionLimit: 10,
   acquireTimeout: 60000,
   timeout: 60000,
-  reconnect: true,
+  // Enable keep-alive to prevent connection timeouts
+  enableKeepAlive: true,
+  keepAliveInitialDelay: 0,
 };
 
 let connection: mysql.Pool;
@@ -40,15 +73,13 @@ if (!global.__db) {
       conn.release();
     })
     .catch((error) => {
-      console.error('❌ Database connection failed:', error);
+      console.error('❌ Database connection failed:', error.message);
     });
 }
 
 connection = global.__db;
 
-// Add error handling for the pool
-connection.on('error', (err) => {
-  console.error('Database pool error:', err);
-});
+// Remove the invalid error event listener - mysql2 pool doesn't have 'error' event
+// Instead, we'll handle errors when making queries
 
 export default connection;
