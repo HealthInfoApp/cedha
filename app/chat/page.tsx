@@ -292,6 +292,7 @@ export default function ChatPage() {
         <header className="bg-white border-b border-slate-200 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
+
               {!sidebarOpen && (
                 <button
                   onClick={() => setSidebarOpen(true)}
@@ -303,8 +304,9 @@ export default function ChatPage() {
                 </button>
               )}
               <h1 className="text-xl font-semibold text-slate-900">
-                {conversations.find(c => c.id === activeConversation)?.title || 'Medical AI Assistant'}
+                {conversations.find(c => c.id === activeConversation)?.title || 'Clinical Nutrition AI'}
               </h1>
+
             </div>
             <div className="flex items-center space-x-2">
               <span className="text-sm text-slate-600">
@@ -314,35 +316,34 @@ export default function ChatPage() {
             </div>
           </div>
         </header>
-
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
                 <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600 text-2xl">🩺</span>
+                  <span className="text-blue-600 text-2xl">🥗</span>
                 </div>
                 <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                  Welcome to MediAI Assistant
+                  Welcome to DietechAI
                 </h3>
                 <p className="text-slate-600 mb-6 max-w-md">
-                  I'm here to help you with medical questions, case studies, drug information, and clinical decision support. How can I assist you today?
+                  I help with clinical nutrition: personalized diet therapy, diet–drug interactions, and evidence-based protocols. How can I support your patient today?
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-lg mx-auto">
                   <button
-                    onClick={() => setNewMessage('Can you help me with a differential diagnosis for chest pain?')}
+                    onClick={() => setNewMessage('Create a precision meal plan for a 55-year-old with T2DM and CKD stage 3.')}
                     className="p-3 text-left bg-white border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
-                    <div className="font-medium text-slate-900">Differential Diagnosis</div>
-                    <div className="text-sm text-slate-600">Help with clinical reasoning</div>
+                    <div className="font-medium text-slate-900">Personalized Plan</div>
+                    <div className="text-sm text-slate-600">Energy, protein, and macros by condition</div>
                   </button>
                   <button
-                    onClick={() => setNewMessage('What are the side effects of metformin?')}
+                    onClick={() => setNewMessage('List key interactions between warfarin and vitamin K–rich foods, with counseling tips.')}
                     className="p-3 text-left bg-white border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
-                    <div className="font-medium text-slate-900">Drug Information</div>
-                    <div className="text-sm text-slate-600">Medication details and interactions</div>
+                    <div className="font-medium text-slate-900">Diet–Drug Interactions</div>
+                    <div className="text-sm text-slate-600">Medication and nutrient considerations</div>
                   </button>
                 </div>
               </div>
@@ -380,10 +381,11 @@ export default function ChatPage() {
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type your medical question here..."
+              placeholder="Type your nutrition or clinical question here..."
               className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               disabled={isSending}
             />
+
             <button
               type="submit"
               disabled={!newMessage.trim() || isSending || !activeConversation}
@@ -399,7 +401,7 @@ export default function ChatPage() {
             </button>
           </form>
           <div className="mt-2 text-xs text-slate-500 text-center">
-            MediAI can make mistakes. Always verify important medical information.
+            DietechAI can make mistakes. Always verify important clinical information.
           </div>
         </div>
       </div>

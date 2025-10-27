@@ -3,33 +3,34 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function ClinicalAIChatbot() {
   const [isLoading, setIsLoading] = useState(false);
 
   const features = [
     {
-      icon: '🧠',
-      title: 'Smart Diagnosis',
-      description: 'AI-powered differential diagnosis and clinical decision support',
+      icon: '🥗',
+      title: 'Personalized Nutrition',
+      description: 'Precision meal plans and macronutrient targets tailored to patient profiles',
+      gradient: 'from-emerald-500 to-teal-500'
+    },
+    {
+      icon: '🧬',
+      title: 'Nutrigenomics Insights',
+      description: 'Translate genetic markers into actionable dietary recommendations',
       gradient: 'from-purple-500 to-blue-500'
     },
     {
-      icon: '📚',
-      title: 'Medical Learning',
-      description: 'Interactive case studies and anatomy visualization',
-      gradient: 'from-green-500 to-teal-500'
-    },
-    {
       icon: '💊',
-      title: 'Drug Database',
-      description: 'Comprehensive medication information and interactions',
+      title: 'Diet–Drug Interactions',
+      description: 'Identify nutrient–medication interactions and contraindications',
       gradient: 'from-orange-500 to-red-500'
     },
     {
-      icon: '🔬',
-      title: 'Research Assistant',
-      description: 'Latest medical literature and clinical guidelines',
+      icon: '📑',
+      title: 'Clinical Guidelines',
+      description: 'Evidence-based protocols for obesity, diabetes, CKD, CVD, and more',
       gradient: 'from-indigo-500 to-purple-500'
     }
   ];
@@ -52,11 +53,11 @@ export default function ClinicalAIChatbot() {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center space-x-3"
             >
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">⚕️</span>
+              <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-white">
+                <Image src="/dietech.png" alt="DietechAI" width={32} height={32} priority />
               </div>
               <span className="font-bold text-xl text-slate-800">
-                MediAI
+                DietechAI
               </span>
             </motion.div>
             
@@ -85,7 +86,7 @@ export default function ClinicalAIChatbot() {
             >
               Your AI
               <span className="block bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                Clinical Partner
+                Clinical Nutrition Partner
               </span>
             </motion.h1>
             
@@ -95,7 +96,7 @@ export default function ClinicalAIChatbot() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto"
             >
-              Advanced AI assistant for healthcare professionals. Enhance diagnostics, streamline workflows, and accelerate medical learning.
+              DietechAI delivers personalized medicine for nutrition: precision diet therapy, patient-specific counseling, and evidence-based guidance for clinical practice.
             </motion.p>
 
             <motion.div 
@@ -140,10 +141,10 @@ export default function ClinicalAIChatbot() {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Powerful Features
+              Nutrition-Focused Features
             </h2>
             <p className="text-slate-600 max-w-xl mx-auto">
-              Everything you need for modern clinical practice
+              Tools for precision nutrition and clinical dietetics
             </p>
           </motion.div>
 
@@ -176,15 +177,15 @@ export default function ClinicalAIChatbot() {
       <footer className="bg-slate-50 border-t border-slate-200 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
-              <span className="text-white text-xs font-bold">⚕️</span>
+            <div className="w-6 h-6 rounded overflow-hidden flex items-center justify-center bg-white">
+              <Image src="/dietech.png" alt="DietechAI" width={24} height={24} />
             </div>
             <span className="font-bold text-lg text-slate-800">
-              MediAI
+              DietechAI
             </span>
           </div>
           <p className="text-slate-600 text-sm mb-6 max-w-md mx-auto">
-            AI-powered clinical support for healthcare professionals and medical students.
+            AI-powered clinical nutrition support for healthcare professionals and dietitians.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-500">
             <a href="#" className="hover:text-blue-600 transition-colors">Privacy</a>

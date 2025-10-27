@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -106,12 +107,12 @@ export default function SignupPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="flex items-center justify-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-lg">⚕️</span>
+              <div className="w-10 h-10 rounded-xl overflow-hidden bg-white flex items-center justify-center">
+                <Image src="/dietech.png" alt="DietechAI" width={40} height={40} />
               </div>
             </div>
             <h1 className="text-2xl font-bold text-slate-900 mb-2">
-              Join MediAI
+              Join DietechAI
             </h1>
             <p className="text-slate-600 text-sm">
               Create your account to get started

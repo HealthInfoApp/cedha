@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface User {
   id: number;
@@ -164,11 +165,11 @@ export default function ProfilePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">⚕️</span>
+              <div className="w-8 h-8 rounded-lg overflow-hidden bg-white flex items-center justify-center">
+                <Image src="/dietech.png" alt="DietechAI" width={32} height={32} />
               </div>
               <span className="font-bold text-xl text-slate-800">
-                MediAI Profile
+                DietechAI Profile
               </span>
             </div>
             

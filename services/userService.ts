@@ -5,6 +5,8 @@ import { User, CreateUserData } from '@/models/User';
 export class UserService {
   async createUser(userData: CreateUserData): Promise<Omit<User, 'password'>> {
     const hashedPassword = await hashPassword(userData.password);
+    const specialization = userData.specialization ?? null;
+    const phoneNumber = userData.phone_number ?? null;
     
     const [result] = await connection.execute(
       `INSERT INTO users (email, password, full_name, user_type, specialization, phone_number) 
@@ -14,8 +16,8 @@ export class UserService {
         hashedPassword, 
         userData.full_name, 
         userData.user_type, 
-        userData.specialization, 
-        userData.phone_number
+        specialization, 
+        phoneNumber
       ]
     );
 

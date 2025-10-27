@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     // Return user data (without password) and token
     const response = NextResponse.json(
       { 
-        message: 'Account created successfully! Welcome to MediAI.', 
+        message: 'Account created successfully! Welcome to DietechAI.', 
         user,
         token 
       },

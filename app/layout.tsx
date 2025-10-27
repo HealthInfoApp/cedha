@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'My First Next.js App',
-  description: 'A demo Next.js application with TypeScript and Tailwind CSS',
+  title: 'DietechAI — Clinical Nutrition AI',
+  description: 'Personalized medicine for nutrition: precision diet therapy, nutrigenomics insights, and diet–drug interaction guidance.',
 }
 
 export default function RootLayout({
