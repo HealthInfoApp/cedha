@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Send, User, Bot, Plus, Menu, X, LogOut, MessageSquare, Settings, User as UserIcon } from 'lucide-react';
+import { Send, User, Bot, Plus, Menu, X, LogOut, MessageSquare, Settings, User as UserIcon, Search, Book, Folder, Grid3X3, Mic, Activity, ChevronDown, Diamond } from 'lucide-react';
 import Markdown from 'react-markdown';
 
 interface User {
@@ -285,214 +285,277 @@ export default function ChatPage() {
 
       {/* Sidebar */}
       <div 
-        className={`fixed inset-y-0 left-0 z-30 w-80 bg-gray-900 text-white transform ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-900 text-white transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col`}
       >
-        <div className="p-4 border-b border-gray-800">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold">Cedha AI</h2>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="md:hidden p-1 rounded-md hover:bg-gray-800"
-            >
-              <X size={20} />
-            </button>
-          </div>
+        {/* Top Section */}
+        <div className="p-4 border-b border-gray-700">
           <button
             onClick={createNewConversation}
-            className="w-full mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border border-gray-600 hover:bg-gray-800 transition-colors"
           >
-            + New Chat
+            <Plus size={16} />
+            New chat
+            <span className="ml-auto text-xs text-gray-400">Ctrl+Shift+O</span>
+          </button>
+          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors mt-2">
+            <Search size={16} />
+            Search chats
+          </button>
+          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
+            <Book size={16} />
+            Library
+          </button>
+          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
+            <Folder size={16} />
+            Projects
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
-          {conversations.map((conversation) => (
-            <button
-              key={conversation.id}
-              onClick={() => {
-                setActiveConversation(conversation.id);
-                loadMessages(conversation.id);
-              }}
-              className={`w-full text-left p-4 border-b border-slate-100 hover:bg-slate-50 transition-colors ${
-                activeConversation === conversation.id ? 'bg-blue-50 border-blue-200' : ''
-              }`}
-            >
-              <div className="font-medium text-slate-900 truncate">
-                {conversation.title}
-              </div>
-              <div className="text-sm text-slate-500">
-                {new Date(conversation.updated_at).toLocaleDateString()}
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* User Profile Section */}
-        <div className="p-4 border-t border-slate-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full flex items-center justify-center">
-              {user?.profile_image ? (
-                <img 
-                  src={user.profile_image} 
-                  alt={user.full_name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              ) : (
-                <span className="text-white font-bold text-sm">
-                  {user?.full_name?.charAt(0).toUpperCase()}
-                </span>
-              )}
+        {/* GPTs Section */}
+        <div className="border-b border-gray-700 p-4">
+          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
+            <Grid3X3 size={16} />
+            Explore
+          </button>
+          <div className="mt-3 space-y-1">
+            <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
+              <div className="w-4 h-4 bg-blue-500 rounded"></div>
+              AI Humanizer
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-slate-900 truncate">
-                {user?.full_name}
-              </p>
-              <p className="text-xs text-slate-500 truncate">
-                {user?.user_type}
-              </p>
+            <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
+              <div className="w-4 h-4 bg-green-500 rounded"></div>
+              Website Generator
             </div>
-            <div className="flex space-x-1">
-              <button
-                onClick={() => router.push('/profile')}
-                className="p-2 text-slate-600 hover:text-slate-900 transition-colors"
-                title="Profile Settings"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </button>
-              <button
-                onClick={handleLogout}
-                className="p-2 text-slate-600 hover:text-slate-900 transition-colors"
-                title="Logout"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-              </button>
+            <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
+              <div className="w-4 h-4 bg-purple-500 rounded"></div>
+              Code Tutor
             </div>
           </div>
+        </div>
+
+        {/* Your chats Section */}
+        <div className="flex-1 overflow-y-auto p-4">
+          <p className="text-xs text-gray-400 uppercase font-semibold mb-2">Your chats</p>
+          <div className="space-y-1">
+            {conversations.length > 0 ? (
+              conversations.map((conversation) => (
+                <button
+                  key={conversation.id}
+                  onClick={() => {
+                    setActiveConversation(conversation.id);
+                    loadMessages(conversation.id);
+                  }}
+                  className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                    activeConversation === conversation.id 
+                      ? 'bg-gray-800 text-white' 
+                      : 'text-gray-300 hover:bg-gray-800'
+                  }`}
+                >
+                  <div className="truncate">
+                    {conversation.title}
+                  </div>
+                </button>
+              ))
+            ) : (
+              <div className="text-sm text-gray-500">
+                <div className="px-3 py-2">Reply message draft</div>
+                <div className="px-3 py-2">Group name suggestions</div>
+                <div className="px-3 py-2">Project report structure</div>
+                <div className="px-3 py-2">Calculate total cost</div>
+                <div className="px-3 py-2">Generate it now</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div className="p-4 border-t border-gray-700">
+          <div className="flex items-center gap-3 px-3 py-2 mb-3">
+            <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+              <User size={16} />
+            </div>
+            <div className="flex-1">
+              <div className="text-sm font-medium">{user?.full_name || 'User'}</div>
+              <div className="text-xs text-gray-400">chatopt.com</div>
+            </div>
+          </div>
+          <button className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+            Upgrade
+          </button>
         </div>
       </div>
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-white border-b border-slate-200 p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-
-              {!isSidebarOpen && (
-                <button
-                  onClick={() => setIsSidebarOpen(true)}
-                  className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
-                >
-                  <Menu size={20} />
-                </button>
-              )}
-              <h1 className="text-xl font-semibold text-slate-900">
-                {conversations.find(c => c.id === activeConversation)?.title || 'Clinical Nutrition AI'}
-              </h1>
-
+        <header className="border-b border-gray-200 px-4 py-3 flex items-center justify-between bg-white">
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden p-2 rounded-md hover:bg-gray-100">
+            {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-3 py-1 rounded-md transition-colors">
+              <h1 className="text-lg font-semibold">ChatGPT</h1>
+              <ChevronDown size={16} className="text-gray-500" />
             </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-slate-600">
-                Powered by AI
-              </span>
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-1 px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors border border-gray-300 rounded-md hover:bg-gray-50">
+              <Diamond size={14} />
+              Upgrade to Go
+            </button>
+            <div className="text-sm text-gray-500 flex items-center gap-1">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              Memory full
             </div>
+            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-400 transition-colors">
+              <User size={16} className="text-gray-600" />
+            </div>
+            <button className="p-2 rounded-md hover:bg-gray-100 transition-colors">
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+            </button>
           </div>
         </header>
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
-                <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-blue-600 text-2xl">🥗</span>
-                </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                  Welcome to DietechAI
-                </h3>
-                <p className="text-slate-600 mb-6 max-w-md">
-                  I help with clinical nutrition: personalized diet therapy, diet–drug interactions, and evidence-based protocols. How can I support your patient today?
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-lg mx-auto">
+                <h2 className="text-3xl font-semibold text-gray-800 mb-4">
+                  Where should we begin?
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8 max-w-2xl mx-auto">
                   <button
                     onClick={() => setInput('Create a precision meal plan for a 55-year-old with T2DM and CKD stage 3.')}
-                    className="p-3 text-left bg-white border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    className="p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
                   >
-                    <div className="font-medium text-slate-900">Personalized Plan</div>
-                    <div className="text-sm text-slate-600">Energy, protein, and macros by condition</div>
+                    Create a precision meal plan for a 55-year-old with T2DM and CKD stage 3.
                   </button>
                   <button
                     onClick={() => setInput('List key interactions between warfarin and vitamin K–rich foods, with counseling tips.')}
-                    className="p-3 text-left bg-white border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
+                    className="p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
                   >
-                    <div className="font-medium text-slate-900">Diet–Drug Interactions</div>
-                    <div className="text-sm text-slate-600">Medication and nutrient considerations</div>
+                    List key interactions between warfarin and vitamin K–rich foods, with counseling tips.
+                  </button>
+                  <button
+                    onClick={() => setInput('What are the nutritional considerations for elderly patients with sarcopenia?')}
+                    className="p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                  >
+                    What are the nutritional considerations for elderly patients with sarcopenia?
+                  </button>
+                  <button
+                    onClick={() => setInput('Explain the Mediterranean diet and its benefits for cardiovascular health.')}
+                    className="p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
+                  >
+                    Explain the Mediterranean diet and its benefits for cardiovascular health.
                   </button>
                 </div>
               </div>
             </div>
           ) : (
-            messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex ${message.is_user_message ? 'justify-end' : 'justify-start'}`}
-              >
+            <div className="max-w-3xl mx-auto py-6 px-4">
+              {messages.map((message) => (
                 <div
-                  className={`max-w-3xl rounded-2xl px-4 py-3 ${
-                    message.is_user_message
-                      ? 'bg-blue-600 text-white rounded-br-none'
-                      : 'bg-white border border-slate-200 text-slate-900 rounded-bl-none shadow-sm'
-                  }`}
+                  key={message.id}
+                  className={`flex ${message.is_user_message ? 'justify-end' : 'justify-start'} mb-6`}
                 >
-                  <div className="whitespace-pre-wrap">{message.message}</div>
-                  <div className={`text-xs mt-2 ${
-                    message.is_user_message ? 'text-blue-200' : 'text-slate-500'
-                  }`}>
-                    {new Date(message.created_at).toLocaleTimeString()}
+                  <div
+                    className={`flex max-w-[85%] md:max-w-[80%] ${
+                      message.is_user_message ? 'flex-row-reverse' : ''
+                    }`}
+                  >
+                    <div
+                      className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                        message.is_user_message ? 'bg-blue-600 text-white ml-3' : 'bg-gray-200 text-gray-700 mr-3'
+                      }`}
+                    >
+                      {message.is_user_message ? <User size={16} /> : <Bot size={16} />}
+                    </div>
+                    <div
+                      className={`px-4 py-3 rounded-2xl ${
+                        message.is_user_message
+                          ? 'bg-blue-600 text-white rounded-br-none'
+                          : 'bg-white border border-gray-200 rounded-bl-none shadow-sm'
+                      }`}
+                    >
+                      <div className="whitespace-pre-wrap">{message.message}</div>
+                      <div className={`text-xs mt-2 ${
+                        message.is_user_message ? 'text-blue-200' : 'text-gray-500'
+                      }`}>
+                        {new Date(message.created_at).toLocaleTimeString()}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))}
+              {isSending && (
+                <div className="flex items-center justify-start mb-6">
+                  <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center mr-3">
+                    <Bot size={16} className="animate-pulse" />
+                  </div>
+                  <div className="px-4 py-3 bg-white border border-gray-200 rounded-2xl rounded-bl-none shadow-sm">
+                    <div className="flex space-x-2">
+                      <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" />
+                      <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-100" />
+                      <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-200" />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
           )}
-          <div ref={messagesEndRef} />
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-slate-200 bg-white p-4">
-          <form onSubmit={sendMessage} className="flex space-x-4">
-            <textarea
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type your nutrition or clinical question here..."
-              rows={1}
-              className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none max-h-32"
-              disabled={isSending}
-            />
-
-            <button
-              type="submit"
-              disabled={!input.trim() || isSending || !activeConversation}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isSending ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                <Send size={20} />
-              )}
-            </button>
+        <div className="border-t border-gray-200 bg-white px-4 py-4">
+          <form onSubmit={sendMessage} className="max-w-3xl mx-auto">
+            <div className="relative">
+              <button
+                type="button"
+                className="absolute left-3 bottom-3 p-1 rounded-md text-gray-400 hover:text-gray-600"
+              >
+                <Plus size={20} />
+              </button>
+              <textarea
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask anything"
+                rows={1}
+                className="w-full pl-10 pr-24 py-3 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32"
+                disabled={isSending || !activeConversation}
+              />
+              <div className="absolute right-2 bottom-2 flex items-center gap-1">
+                <button
+                  type="button"
+                  className="p-1 rounded-md text-gray-400 hover:text-gray-600"
+                >
+                  <Mic size={20} />
+                </button>
+                <button
+                  type="button"
+                  className="p-1 rounded-md text-gray-400 hover:text-gray-600"
+                >
+                  <Activity size={20} />
+                </button>
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isSending || !activeConversation}
+                  className="p-1 rounded-md text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:hover:text-gray-400"
+                >
+                  <Send size={20} />
+                </button>
+              </div>
+            </div>
+            <div className="mt-2 text-xs text-gray-500 text-center">
+              ChatGPT can make mistakes. Consider checking important information.
+            </div>
           </form>
-          <div className="mt-2 text-xs text-slate-500 text-center">
-            DietechAI can make mistakes. Always verify important clinical information.
-          </div>
         </div>
       </div>
     </div>

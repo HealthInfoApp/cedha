@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Send, User, Bot, LogIn, Plus, Menu, X } from 'lucide-react';
+import { Send, User, Bot, LogIn, Plus, Menu, X, MessageSquare, Search, Book, Folder, Grid3X3, Mic, Activity, ChevronDown, Diamond } from 'lucide-react';
 import Markdown from 'react-markdown';
 
 type Message = {
@@ -136,7 +136,7 @@ export default function PublicChatPage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 text-gray-900">
+    <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <div
         className={`fixed inset-y-0 left-0 z-20 w-64 bg-gray-900 text-white transition-transform duration-300 ease-in-out transform ${
@@ -144,53 +144,90 @@ export default function PublicChatPage() {
         } md:relative md:translate-x-0`}
       >
         <div className="flex flex-col h-full">
+          {/* Sidebar Header */}
           <div className="p-4 border-b border-gray-700">
-            <h1 className="text-xl font-bold">Cedha AI</h1>
-            <p className="text-sm text-gray-400">Your AI Assistant</p>
-          </div>
-          <div className="flex-1 overflow-y-auto p-4">
             <button
               onClick={startNewChat}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 mb-4 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border border-gray-600 hover:bg-gray-800 transition-colors"
             >
               <Plus size={16} />
-              New Chat
+              New chat
+              <span className="ml-auto text-xs text-gray-400">Ctrl+Shift+O</span>
             </button>
-            <div className="mt-4">
-              <p className="text-xs text-gray-400 uppercase font-semibold mb-2">Chat History</p>
-              <div className="text-sm text-gray-300">
-                {messageCount >= MESSAGE_LIMIT ? (
-                  <div className="p-3 bg-gray-800 rounded-lg mb-2">
-                    <p className="text-yellow-400">Message limit reached</p>
-                    <button
-                      onClick={() => router.push('/login?redirect=/chat')}
-                      className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-1.5 text-sm rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-                    >
-                      <LogIn size={14} /> Login to Continue
-                    </button>
-                  </div>
-                ) : (
-                  <p className="text-gray-400">
-                    Messages: {messageCount}/{MESSAGE_LIMIT}
-                  </p>
-                )}
+            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors mt-2">
+              <Search size={16} />
+              Search chats
+            </button>
+            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
+              <Book size={16} />
+              Library
+            </button>
+            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
+              <Folder size={16} />
+              Projects
+            </button>
+          </div>
+          
+          {/* GPTs Section */}
+          <div className="border-b border-gray-700 p-4">
+            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
+              <Grid3X3 size={16} />
+              Explore
+            </button>
+            <div className="mt-3 space-y-1">
+              <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
+                <div className="w-4 h-4 bg-blue-500 rounded"></div>
+                AI Humanizer
+              </div>
+              <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
+                <div className="w-4 h-4 bg-green-500 rounded"></div>
+                Website Generator
+              </div>
+              <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
+                <div className="w-4 h-4 bg-purple-500 rounded"></div>
+                Code Tutor
               </div>
             </div>
           </div>
+          
+          {/* Your chats Section */}
+          <div className="flex-1 overflow-y-auto p-4">
+            <p className="text-xs text-gray-400 uppercase font-semibold mb-2">Your chats</p>
+            <div className="space-y-1">
+              <div className="text-sm text-gray-500">
+                <div className="px-3 py-2">Reply message draft</div>
+                <div className="px-3 py-2">Group name suggestions</div>
+                <div className="px-3 py-2">Project report structure</div>
+                <div className="px-3 py-2">Calculate total cost</div>
+                <div className="px-3 py-2">Generate it now</div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Bottom Section */}
           <div className="p-4 border-t border-gray-700">
+            <div className="flex items-center gap-3 px-3 py-2 mb-3">
+              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
+                <User size={16} />
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-medium">Demo User</div>
+                <div className="text-xs text-gray-400">chatopt.com</div>
+              </div>
+            </div>
             {messageCount >= MESSAGE_LIMIT ? (
               <button
                 onClick={() => router.push('/login?redirect=/chat')}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
               >
-                <LogIn size={16} /> Login for Unlimited Chats
+                Upgrade
               </button>
             ) : (
               <button
-                onClick={() => router.push('/signup')}
-                className="w-full text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                onClick={() => router.push('/login?redirect=/chat')}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
               >
-                Create an account for unlimited chats
+                Upgrade
               </button>
             )}
           </div>
@@ -198,44 +235,50 @@ export default function PublicChatPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden bg-white">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 p-4 flex items-center justify-between md:justify-end">
+        <header className="border-b border-gray-200 px-4 py-3 flex items-center justify-between bg-white">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
             className="md:hidden p-2 rounded-md hover:bg-gray-100"
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={startNewChat}
-              className="hidden md:flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-gray-100 hover:bg-gray-200 transition-colors"
-            >
-              <Plus size={16} />
-              New Chat
+          <div className="flex-1 flex items-center justify-center">
+            <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-3 py-1 rounded-md transition-colors">
+              <h1 className="text-lg font-semibold">ChatGPT</h1>
+              <ChevronDown size={16} className="text-gray-500" />
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <button className="flex items-center gap-1 px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors border border-gray-300 rounded-md hover:bg-gray-50">
+              <Diamond size={14} />
+              Upgrade to Go
             </button>
-            <button
-              onClick={() => router.push('/login')}
-              className="px-4 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
-            >
-              Login
+            <div className="text-sm text-gray-500 flex items-center gap-1">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              Memory full
+            </div>
+            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-400 transition-colors">
+              <User size={16} className="text-gray-600" />
+            </div>
+            <button className="p-2 rounded-md hover:bg-gray-100 transition-colors">
+              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
             </button>
           </div>
         </header>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50">
+        <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-4">
-              <div className="max-w-2xl mx-auto">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-                  Welcome to Cedha AI
+            <div className="h-full flex flex-col items-center justify-center px-4">
+              <div className="max-w-2xl w-full text-center">
+                <h2 className="text-3xl font-semibold text-gray-800 mb-4">
+                  Where should we begin?
                 </h2>
-                <p className="text-gray-600 mb-8">
-                  Ask me anything! You can send up to {MESSAGE_LIMIT} messages without an account.
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
                   {[
                     'What is nutrition counseling?',
                     'How can I improve my diet?',
@@ -254,13 +297,13 @@ export default function PublicChatPage() {
               </div>
             </div>
           ) : (
-            <div className="max-w-3xl mx-auto space-y-6">
+            <div className="max-w-3xl mx-auto py-6 px-4">
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-6`}
                 >
                   <div
                     className={`flex max-w-[85%] md:max-w-[80%] ${
@@ -278,7 +321,7 @@ export default function PublicChatPage() {
                       className={`px-4 py-3 rounded-2xl ${
                         message.role === 'user'
                           ? 'bg-blue-600 text-white rounded-br-none'
-                          : 'bg-white border border-gray-200 rounded-bl-none'
+                          : 'bg-gray-50 border border-gray-200 rounded-bl-none'
                       }`}
                     >
                       {message.role === 'assistant' ? (
@@ -296,11 +339,11 @@ export default function PublicChatPage() {
                 </motion.div>
               ))}
               {isLoading && (
-                <div className="flex items-center justify-start">
+                <div className="flex items-center justify-start mb-6">
                   <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center mr-3">
                     <Bot size={16} className="animate-pulse" />
                   </div>
-                  <div className="px-4 py-3 bg-white border border-gray-200 rounded-2xl rounded-bl-none">
+                  <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl rounded-bl-none">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" />
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-100" />
@@ -315,26 +358,46 @@ export default function PublicChatPage() {
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-gray-200 bg-white p-4">
+        <div className="border-t border-gray-200 bg-white px-4 py-4">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
             <div className="relative">
+              <button
+                type="button"
+                className="absolute left-3 bottom-3 p-1 rounded-md text-gray-400 hover:text-gray-600"
+              >
+                <Plus size={20} />
+              </button>
               <textarea
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Message Cedha AI..."
+                placeholder="Ask anything"
                 rows={1}
-                className="w-full px-4 py-3 pr-12 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32"
+                className="w-full pl-10 pr-24 py-3 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32"
                 disabled={isLoading || messageCount >= MESSAGE_LIMIT}
               />
-              <button
-                type="submit"
-                disabled={!input.trim() || isLoading || messageCount >= MESSAGE_LIMIT}
-                className="absolute right-2 bottom-2 p-2 rounded-md text-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:hover:bg-transparent"
-              >
-                <Send size={20} />
-              </button>
+              <div className="absolute right-2 bottom-2 flex items-center gap-1">
+                <button
+                  type="button"
+                  className="p-1 rounded-md text-gray-400 hover:text-gray-600"
+                >
+                  <Mic size={20} />
+                </button>
+                <button
+                  type="button"
+                  className="p-1 rounded-md text-gray-400 hover:text-gray-600"
+                >
+                  <Activity size={20} />
+                </button>
+                <button
+                  type="submit"
+                  disabled={!input.trim() || isLoading || messageCount >= MESSAGE_LIMIT}
+                  className="p-1 rounded-md text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:hover:text-gray-400"
+                >
+                  <Send size={20} />
+                </button>
+              </div>
             </div>
             {messageCount >= MESSAGE_LIMIT && (
               <div className="mt-2 text-center">
@@ -350,6 +413,9 @@ export default function PublicChatPage() {
                 </p>
               </div>
             )}
+            <div className="mt-2 text-xs text-gray-500 text-center">
+              ChatGPT can make mistakes. Consider checking important information.
+            </div>
           </form>
         </div>
       </div>
