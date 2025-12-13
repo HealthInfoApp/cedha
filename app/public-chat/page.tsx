@@ -139,61 +139,33 @@ export default function PublicChatPage() {
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-20 w-64 bg-gray-900 text-white transition-transform duration-300 ease-in-out transform ${
+        className={`fixed inset-y-0 left-0 z-20 w-64 bg-white border-r border-slate-200 text-slate-900 transition-transform duration-300 ease-in-out transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:translate-x-0`}
       >
         <div className="flex flex-col h-full">
-          {/* Sidebar Header - DietechAI Branded */}
-          <div className="p-4 border-b border-slate-700">
+          {/* Sidebar Header */}
+          <div className="p-4 border-b border-slate-200">
             <button
               onClick={startNewChat}
-              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl text-white"
             >
               <Plus size={18} />
               New Consultation
-              <span className="ml-auto text-xs text-emerald-200">Ctrl+Shift+N</span>
             </button>
-            <div className="mt-3 space-y-1">
-              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+            <div className="mt-3">
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md transition-colors">
                 <Search size={16} />
                 Search consultations
-              </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-                <Book size={16} />
-                Nutrition Library
-              </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-                <Folder size={16} />
-                Patient Files
-              </button>
-            </div>
-          </div>
-          
-          {/* DietechAI Tools Section */}
-          <div className="border-b border-slate-700 p-4">
-            <h3 className="text-xs text-slate-400 uppercase font-semibold mb-3">DietechAI Tools</h3>
-            <div className="space-y-1">
-              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-                <div className="w-4 h-4 bg-emerald-500 rounded"></div>
-                Meal Planner
-              </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-                <div className="w-4 h-4 bg-blue-500 rounded"></div>
-                Nutrient Analyzer
-              </button>
-              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-                <div className="w-4 h-4 bg-purple-500 rounded"></div>
-                Diet-Drug Checker
               </button>
             </div>
           </div>
           
           {/* Recent Consultations */}
           <div className="flex-1 overflow-y-auto p-4">
-            <h3 className="text-xs text-slate-400 uppercase font-semibold mb-3">Recent Consultations</h3>
+            <h3 className="text-xs text-slate-500 uppercase font-semibold mb-3">Recent Consultations</h3>
             <div className="space-y-1">
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-slate-400">
                 <div className="px-3 py-2">Diabetes meal planning</div>
                 <div className="px-3 py-2">Renal diet consultation</div>
                 <div className="px-3 py-2">Cardiac nutrition plan</div>
@@ -204,31 +176,22 @@ export default function PublicChatPage() {
           </div>
           
           {/* User Profile Section */}
-          <div className="p-4 border-t border-slate-700">
+          <div className="p-4 border-t border-slate-200">
             <div className="flex items-center gap-3 px-3 py-2 mb-3">
               <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
                 <User size={18} className="text-white" />
               </div>
               <div className="flex-1">
-                <div className="text-sm font-medium text-white">Demo User</div>
-                <div className="text-xs text-slate-400">dietech.ai</div>
+                <div className="text-sm font-medium text-slate-900">Demo User</div>
+                <div className="text-xs text-slate-500">dietech.ai</div>
               </div>
             </div>
-            {messageCount >= MESSAGE_LIMIT ? (
-              <button
-                onClick={() => router.push('/login?redirect=/chat')}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-200 shadow-md hover:shadow-lg"
-              >
-                Upgrade for Unlimited
-              </button>
-            ) : (
-              <button
-                onClick={() => router.push('/login?redirect=/chat')}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-200 shadow-md hover:shadow-lg"
-              >
-                Upgrade for Unlimited
-              </button>
-            )}
+            <button
+              onClick={() => router.push('/login?redirect=/chat')}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-200"
+            >
+              Login to access unlimited chats
+            </button>
           </div>
         </div>
       </div>
@@ -258,7 +221,7 @@ export default function PublicChatPage() {
           <div className="flex items-center gap-3">
             <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400">
               <div className="w-4 h-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded"></div>
-              Pro Features
+              Login for Unlimited
             </button>
             <div className="text-sm text-slate-500 flex items-center gap-2 px-3 py-1 bg-amber-50 rounded-full border border-amber-200">
               <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
@@ -350,17 +313,15 @@ export default function PublicChatPage() {
                   </button>
                 </div>
                 <div className="text-sm text-slate-500">
-                  <p>Try DietechAI free for {MESSAGE_LIMIT} consultations • Upgrade for unlimited access</p>
+                  <p>Try DietechAI free for {MESSAGE_LIMIT} consultations • Login for unlimited access</p>
                 </div>
               </div>
             </div>
           ) : (
             <div className="max-w-3xl mx-auto py-6 px-4">
               {messages.map((message) => (
-                <motion.div
+                <div
                   key={message.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
                   className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'} mb-6`}
                 >
                   <div
@@ -379,7 +340,7 @@ export default function PublicChatPage() {
                       className={`px-4 py-3 rounded-2xl ${
                         message.role === 'user'
                           ? 'bg-blue-600 text-white rounded-br-none'
-                          : 'bg-gray-50 border border-gray-200 rounded-bl-none'
+                          : 'bg-white border border-gray-200 rounded-bl-none shadow-sm'
                       }`}
                     >
                       {message.role === 'assistant' ? (
@@ -389,19 +350,21 @@ export default function PublicChatPage() {
                       ) : (
                         <p className="whitespace-pre-wrap">{message.content}</p>
                       )}
-                      <div className="mt-1 text-xs opacity-70 text-right">
+                      <div className={`text-xs mt-2 ${
+                        message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
+                      }`}>
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
               {isLoading && (
                 <div className="flex items-center justify-start mb-6">
                   <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center mr-3">
                     <Bot size={16} className="animate-pulse" />
                   </div>
-                  <div className="px-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl rounded-bl-none">
+                  <div className="px-4 py-3 bg-white border border-gray-200 rounded-2xl rounded-bl-none shadow-sm">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" />
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-100" />

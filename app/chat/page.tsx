@@ -285,58 +285,30 @@ export default function ChatPage() {
 
       {/* Sidebar */}
       <div 
-        className={`fixed inset-y-0 left-0 z-30 w-64 bg-slate-900 text-white transform ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-slate-200 text-slate-900 transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col`}
       >
-        {/* Top Section - DietechAI Branded */}
-        <div className="p-4 border-b border-slate-700">
+        {/* Top Section */}
+        <div className="p-4 border-b border-slate-200">
           <button
             onClick={createNewConversation}
-            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl text-white"
           >
             <Plus size={18} />
             New Consultation
-            <span className="ml-auto text-xs text-emerald-200">Ctrl+Shift+N</span>
           </button>
-          <div className="mt-3 space-y-1">
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+          <div className="mt-3">
+            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md transition-colors">
               <Search size={16} />
               Search consultations
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-              <Book size={16} />
-              Nutrition Library
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-              <Folder size={16} />
-              Patient Files
-            </button>
-          </div>
-        </div>
-
-        {/* DietechAI Tools Section */}
-        <div className="border-b border-slate-700 p-4">
-          <h3 className="text-xs text-slate-400 uppercase font-semibold mb-3">DietechAI Tools</h3>
-          <div className="space-y-1">
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-              <div className="w-4 h-4 bg-emerald-500 rounded"></div>
-              Meal Planner
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-              <div className="w-4 h-4 bg-blue-500 rounded"></div>
-              Nutrient Analyzer
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
-              <div className="w-4 h-4 bg-purple-500 rounded"></div>
-              Diet-Drug Checker
             </button>
           </div>
         </div>
 
         {/* Recent Consultations */}
         <div className="flex-1 overflow-y-auto p-4">
-          <h3 className="text-xs text-slate-400 uppercase font-semibold mb-3">Recent Consultations</h3>
+          <h3 className="text-xs text-slate-500 uppercase font-semibold mb-3">Recent Consultations</h3>
           <div className="space-y-1">
             {conversations.length > 0 ? (
               conversations.map((conversation) => (
@@ -348,8 +320,8 @@ export default function ChatPage() {
                   }}
                   className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
                     activeConversation === conversation.id 
-                      ? 'bg-slate-800 text-white border-l-2 border-emerald-500' 
-                      : 'text-slate-300 hover:bg-slate-800'
+                      ? 'bg-emerald-50 text-emerald-900 border-l-2 border-emerald-500' 
+                      : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   <div className="truncate">
@@ -358,7 +330,7 @@ export default function ChatPage() {
                 </button>
               ))
             ) : (
-              <div className="text-sm text-slate-500">
+              <div className="text-sm text-slate-400">
                 <div className="px-3 py-2">Diabetes meal planning</div>
                 <div className="px-3 py-2">Renal diet consultation</div>
                 <div className="px-3 py-2">Cardiac nutrition plan</div>
@@ -370,18 +342,21 @@ export default function ChatPage() {
         </div>
 
         {/* User Profile Section */}
-        <div className="p-4 border-t border-slate-700">
+        <div className="p-4 border-t border-slate-200">
           <div className="flex items-center gap-3 px-3 py-2 mb-3">
             <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
               <User size={18} className="text-white" />
             </div>
             <div className="flex-1">
-              <div className="text-sm font-medium text-white">{user?.full_name || 'Nutritionist'}</div>
-              <div className="text-xs text-slate-400">{user?.email || 'dietech.ai'}</div>
+              <div className="text-sm font-medium text-slate-900">{user?.full_name || 'Nutritionist'}</div>
+              <div className="text-xs text-slate-500">{user?.email || 'dietech.ai'}</div>
             </div>
           </div>
-          <button className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-200 shadow-md hover:shadow-lg">
-            Upgrade to Pro
+          <button 
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-200"
+          >
+            Logout
           </button>
         </div>
       </div>
