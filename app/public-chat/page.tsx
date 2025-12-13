@@ -144,90 +144,89 @@ export default function PublicChatPage() {
         } md:relative md:translate-x-0`}
       >
         <div className="flex flex-col h-full">
-          {/* Sidebar Header */}
-          <div className="p-4 border-b border-gray-700">
+          {/* Sidebar Header - DietechAI Branded */}
+          <div className="p-4 border-b border-slate-700">
             <button
               onClick={startNewChat}
-              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md border border-gray-600 hover:bg-gray-800 transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              <Plus size={16} />
-              New chat
-              <span className="ml-auto text-xs text-gray-400">Ctrl+Shift+O</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors mt-2">
-              <Search size={16} />
-              Search chats
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
-              <Book size={16} />
-              Library
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
-              <Folder size={16} />
-              Projects
-            </button>
-          </div>
-          
-          {/* GPTs Section */}
-          <div className="border-b border-gray-700 p-4">
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors">
-              <Grid3X3 size={16} />
-              Explore
+              <Plus size={18} />
+              New Consultation
+              <span className="ml-auto text-xs text-emerald-200">Ctrl+Shift+N</span>
             </button>
             <div className="mt-3 space-y-1">
-              <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
-                <div className="w-4 h-4 bg-blue-500 rounded"></div>
-                AI Humanizer
-              </div>
-              <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
-                <div className="w-4 h-4 bg-green-500 rounded"></div>
-                Website Generator
-              </div>
-              <div className="flex items-center gap-3 px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 rounded-md transition-colors cursor-pointer">
-                <div className="w-4 h-4 bg-purple-500 rounded"></div>
-                Code Tutor
-              </div>
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+                <Search size={16} />
+                Search consultations
+              </button>
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+                <Book size={16} />
+                Nutrition Library
+              </button>
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+                <Folder size={16} />
+                Patient Files
+              </button>
             </div>
           </div>
           
-          {/* Your chats Section */}
-          <div className="flex-1 overflow-y-auto p-4">
-            <p className="text-xs text-gray-400 uppercase font-semibold mb-2">Your chats</p>
+          {/* DietechAI Tools Section */}
+          <div className="border-b border-slate-700 p-4">
+            <h3 className="text-xs text-slate-400 uppercase font-semibold mb-3">DietechAI Tools</h3>
             <div className="space-y-1">
-              <div className="text-sm text-gray-500">
-                <div className="px-3 py-2">Reply message draft</div>
-                <div className="px-3 py-2">Group name suggestions</div>
-                <div className="px-3 py-2">Project report structure</div>
-                <div className="px-3 py-2">Calculate total cost</div>
-                <div className="px-3 py-2">Generate it now</div>
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+                <div className="w-4 h-4 bg-emerald-500 rounded"></div>
+                Meal Planner
+              </button>
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+                <div className="w-4 h-4 bg-blue-500 rounded"></div>
+                Nutrient Analyzer
+              </button>
+              <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 rounded-md transition-colors">
+                <div className="w-4 h-4 bg-purple-500 rounded"></div>
+                Diet-Drug Checker
+              </button>
+            </div>
+          </div>
+          
+          {/* Recent Consultations */}
+          <div className="flex-1 overflow-y-auto p-4">
+            <h3 className="text-xs text-slate-400 uppercase font-semibold mb-3">Recent Consultations</h3>
+            <div className="space-y-1">
+              <div className="text-sm text-slate-500">
+                <div className="px-3 py-2">Diabetes meal planning</div>
+                <div className="px-3 py-2">Renal diet consultation</div>
+                <div className="px-3 py-2">Cardiac nutrition plan</div>
+                <div className="px-3 py-2">Pediatric nutrition</div>
+                <div className="px-3 py-2">Sports nutrition</div>
               </div>
             </div>
           </div>
           
-          {/* Bottom Section */}
-          <div className="p-4 border-t border-gray-700">
+          {/* User Profile Section */}
+          <div className="p-4 border-t border-slate-700">
             <div className="flex items-center gap-3 px-3 py-2 mb-3">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center">
-                <User size={16} />
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
+                <User size={18} className="text-white" />
               </div>
               <div className="flex-1">
-                <div className="text-sm font-medium">Demo User</div>
-                <div className="text-xs text-gray-400">chatopt.com</div>
+                <div className="text-sm font-medium text-white">Demo User</div>
+                <div className="text-xs text-slate-400">dietech.ai</div>
               </div>
             </div>
             {messageCount >= MESSAGE_LIMIT ? (
               <button
                 onClick={() => router.push('/login?redirect=/chat')}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                Upgrade
+                Upgrade for Unlimited
               </button>
             ) : (
               <button
                 onClick={() => router.push('/login?redirect=/chat')}
-                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white transition-all duration-200 shadow-md hover:shadow-lg"
               >
-                Upgrade
+                Upgrade for Unlimited
               </button>
             )}
           </div>
@@ -237,33 +236,39 @@ export default function PublicChatPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden bg-white">
         {/* Header */}
-        <header className="border-b border-gray-200 px-4 py-3 flex items-center justify-between bg-white">
+        <header className="border-b border-slate-200 px-4 py-3 flex items-center justify-between bg-white shadow-sm">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden p-2 rounded-md hover:bg-gray-100"
+            className="md:hidden p-2 rounded-md hover:bg-slate-100"
           >
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
           <div className="flex-1 flex items-center justify-center">
-            <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-3 py-1 rounded-md transition-colors">
-              <h1 className="text-lg font-semibold">ChatGPT</h1>
-              <ChevronDown size={16} className="text-gray-500" />
+            <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 px-4 py-2 rounded-lg transition-colors group">
+              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
+                <span className="text-white font-bold text-sm">D</span>
+              </div>
+              <div>
+                <h1 className="text-lg font-semibold text-slate-900">DietechAI</h1>
+                <p className="text-xs text-slate-500">Clinical Nutrition Assistant</p>
+              </div>
+              <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600 transition-colors" />
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1 px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors border border-gray-300 rounded-md hover:bg-gray-50">
-              <Diamond size={14} />
-              Upgrade to Go
+            <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400">
+              <div className="w-4 h-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded"></div>
+              Pro Features
             </button>
-            <div className="text-sm text-gray-500 flex items-center gap-1">
-              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-              Memory full
+            <div className="text-sm text-slate-500 flex items-center gap-2 px-3 py-1 bg-amber-50 rounded-full border border-amber-200">
+              <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+              <span className="text-amber-700 font-medium">{MESSAGE_LIMIT - messageCount} left</span>
             </div>
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-400 transition-colors">
-              <User size={16} className="text-gray-600" />
+            <div className="w-8 h-8 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full flex items-center justify-center cursor-pointer hover:from-slate-300 hover:to-slate-400 transition-all duration-200 shadow-sm hover:shadow-md">
+              <User size={16} className="text-slate-600" />
             </div>
-            <button className="p-2 rounded-md hover:bg-gray-100 transition-colors">
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors group">
+              <svg className="w-5 h-5 text-slate-600 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
             </button>
@@ -273,26 +278,79 @@ export default function PublicChatPage() {
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
           {messages.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center px-4">
-              <div className="max-w-2xl w-full text-center">
-                <h2 className="text-3xl font-semibold text-gray-800 mb-4">
-                  Where should we begin?
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
-                  {[
-                    'What is nutrition counseling?',
-                    'How can I improve my diet?',
-                    'What are superfoods?',
-                    'How much water should I drink daily?',
-                  ].map((suggestion, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setInput(suggestion)}
-                      className="p-4 text-left border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
+            <div className="h-full flex flex-col items-center justify-center px-4 bg-gradient-to-br from-emerald-50 to-teal-50">
+              <div className="max-w-4xl w-full text-center">
+                <div className="mb-8">
+                  <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
+                    <span className="text-white font-bold text-2xl">D</span>
+                  </div>
+                  <h2 className="text-4xl font-bold text-slate-900 mb-3">
+                    Welcome to DietechAI
+                  </h2>
+                  <p className="text-lg text-slate-600 mb-8">
+                    Your clinical nutrition assistant for evidence-based dietary guidance
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  <button
+                    onClick={() => setInput('What is nutrition counseling and how can it help me?')}
+                    className="p-4 text-left border border-slate-200 rounded-xl hover:border-emerald-300 hover:bg-emerald-50 transition-all duration-200 text-sm group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-200 transition-colors">
+                        <span className="text-emerald-600 font-semibold text-xs">NC</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-slate-900 mb-1">Nutrition Counseling</h3>
+                        <p className="text-slate-600 text-xs">What is nutrition counseling and how can it help me?</p>
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setInput('How can I improve my daily diet for better health?')}
+                    className="p-4 text-left border border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-sm group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-blue-200 transition-colors">
+                        <span className="text-blue-600 font-semibold text-xs">DI</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-slate-900 mb-1">Diet Improvement</h3>
+                        <p className="text-slate-600 text-xs">How can I improve my daily diet for better health?</p>
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setInput('What are the most important superfoods for overall wellness?')}
+                    className="p-4 text-left border border-slate-200 rounded-xl hover:border-purple-300 hover:bg-purple-50 transition-all duration-200 text-sm group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-purple-200 transition-colors">
+                        <span className="text-purple-600 font-semibold text-xs">SF</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-slate-900 mb-1">Superfoods</h3>
+                        <p className="text-slate-600 text-xs">What are the most important superfoods for overall wellness?</p>
+                      </div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => setInput('How much water should I drink daily and why is it important?')}
+                    className="p-4 text-left border border-slate-200 rounded-xl hover:border-amber-300 hover:bg-amber-50 transition-all duration-200 text-sm group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:bg-amber-200 transition-colors">
+                        <span className="text-amber-600 font-semibold text-xs">HY</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-slate-900 mb-1">Hydration</h3>
+                        <p className="text-slate-600 text-xs">How much water should I drink daily and why is it important?</p>
+                      </div>
+                    </div>
+                  </button>
+                </div>
+                <div className="text-sm text-slate-500">
+                  <p>Try DietechAI free for {MESSAGE_LIMIT} consultations • Upgrade for unlimited access</p>
                 </div>
               </div>
             </div>
@@ -358,12 +416,12 @@ export default function PublicChatPage() {
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-gray-200 bg-white px-4 py-4">
+        <div className="border-t border-slate-200 bg-white px-4 py-4">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
             <div className="relative">
               <button
                 type="button"
-                className="absolute left-3 bottom-3 p-1 rounded-md text-gray-400 hover:text-gray-600"
+                className="absolute left-3 bottom-3 p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200"
               >
                 <Plus size={20} />
               </button>
@@ -372,28 +430,28 @@ export default function PublicChatPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask anything"
+                placeholder="Ask about clinical nutrition, meal planning, or dietary guidelines..."
                 rows={1}
-                className="w-full pl-10 pr-24 py-3 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none max-h-32"
+                className="w-full pl-12 pr-32 py-4 text-slate-900 bg-slate-50 border border-slate-300 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 resize-none max-h-32 transition-all duration-200 placeholder-slate-500"
                 disabled={isLoading || messageCount >= MESSAGE_LIMIT}
               />
               <div className="absolute right-2 bottom-2 flex items-center gap-1">
                 <button
                   type="button"
-                  className="p-1 rounded-md text-gray-400 hover:text-gray-600"
+                  className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200"
                 >
                   <Mic size={20} />
                 </button>
                 <button
                   type="button"
-                  className="p-1 rounded-md text-gray-400 hover:text-gray-600"
+                  className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200"
                 >
                   <Activity size={20} />
                 </button>
                 <button
                   type="submit"
                   disabled={!input.trim() || isLoading || messageCount >= MESSAGE_LIMIT}
-                  className="p-1 rounded-md text-gray-400 hover:text-gray-600 disabled:opacity-50 disabled:hover:text-gray-400"
+                  className="p-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 disabled:bg-slate-300 disabled:text-slate-500 transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   <Send size={20} />
                 </button>
@@ -401,20 +459,21 @@ export default function PublicChatPage() {
             </div>
             {messageCount >= MESSAGE_LIMIT && (
               <div className="mt-2 text-center">
-                <p className="text-sm text-gray-600">
-                  You've reached the message limit.{' '}
+                <p className="text-sm text-slate-600">
+                  You've reached the free consultation limit.{' '}
                   <button
                     onClick={() => router.push('/login?redirect=/chat')}
-                    className="text-blue-600 hover:underline font-medium"
+                    className="text-emerald-600 hover:underline font-medium"
                   >
                     Login
                   </button>{' '}
-                  for unlimited messages.
+                  or upgrade for unlimited access.
                 </p>
               </div>
             )}
-            <div className="mt-2 text-xs text-gray-500 text-center">
-              ChatGPT can make mistakes. Consider checking important information.
+            <div className="mt-3 text-xs text-slate-500 text-center flex items-center justify-center gap-2">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+              DietechAI provides evidence-based nutrition guidance. Always verify critical clinical decisions.
             </div>
           </form>
         </div>
