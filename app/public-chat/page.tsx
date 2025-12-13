@@ -88,7 +88,7 @@ export default function PublicChatPage() {
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
-      const messageIndex = messages.length;
+      const messageIndex = messages.length + 1; // Account for the newly added user message
 
       while (true) {
         const { done, value } = await reader.read();
@@ -97,10 +97,12 @@ export default function PublicChatPage() {
         const chunk = new TextDecoder().decode(value);
         setMessages((prev) => {
           const newMessages = [...prev];
-          newMessages[messageIndex] = {
-            ...newMessages[messageIndex],
-            content: newMessages[messageIndex].content + chunk,
-          };
+          if (newMessages[messageIndex]) {
+            newMessages[messageIndex] = {
+              ...newMessages[messageIndex],
+              content: newMessages[messageIndex].content + chunk,
+            };
+          }
           return newMessages;
         });
       }
