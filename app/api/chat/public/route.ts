@@ -22,6 +22,57 @@ function resetOldCounts() {
 // Run cleanup every hour
 setInterval(resetOldCounts, 60 * 60 * 1000);
 
+// Groq-backed nutrition AI response
+async function getNutritionAIResponse(userMessage: string): Promise<string> {
+  const apiKey = process.env.GROQ_API_KEY;
+  const model = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
+  const maxTokens = Number(process.env.GROQ_MAX_TOKENS || 2048);
+  const endpoint = 'https://api.groq.com/openai/v1/chat/completions';
+
+  const systemPrompt = `You are DietechAI, a clinical nutrition and personalized medicine assistant.
+Provide concise, evidence-based guidance for:
+- Medical nutrition therapy (eg, T2DM, CKD, CVD, obesity, oncology)
+- Energy/protein needs, macro/micronutrients, and meal planning
+- Diet–drug and nutrient interactions and monitoring
+Always include safety notes and contraindications when relevant. Keep responses factual and succinct.`;
+
+  if (!apiKey) {
+    return generateAIResponse(userMessage);
+  }
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userMessage }
+        ],
+        temperature: 0.3,
+        max_tokens: maxTokens,
+      }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Groq API error:', res.status, text);
+      return 'Sorry, I could not generate a response at the moment. Please try again.';
+    }
+
+    const data = await res.json();
+    const content = data?.choices?.[0]?.message?.content?.trim();
+    return content || 'No response generated.';
+  } catch (err) {
+    console.error('Groq fetch error:', err);
+    return 'Network error contacting AI service. Please try again.';
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { message } = await request.json();
@@ -45,17 +96,17 @@ export async function POST(request: NextRequest) {
     // Increment message count
     ipData.count += 1;
     
-    // Create a transform stream for streaming the response
+    // Generate AI response using Groq
+    const aiResponse = await getNutritionAIResponse(message);
+    
+    // Create a transform stream for streaming response
     const stream = new TransformStream();
     const writer = stream.writable.getWriter();
     const encoder = new TextEncoder();
     
-    // Start processing in the background
+    // Start processing in background
     (async () => {
       try {
-        // Simulate AI processing with streaming
-        const aiResponse = await generateAIResponse(message);
-        
         // Stream the response in chunks
         const chunkSize = 5;
         for (let i = 0; i < aiResponse.length; i += chunkSize) {
@@ -87,10 +138,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Simulated AI response function
+// Simulated AI response function (fallback)
 async function generateAIResponse(userMessage: string): Promise<string> {
   // In a real implementation, this would call an AI service
-  // For now, we'll simulate a response based on the user's message
+  // For now, we'll simulate a response based on user's message
   await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate processing time
   
   const responses = [
@@ -110,7 +161,7 @@ async function generateAIResponse(userMessage: string): Promise<string> {
     "Would you like me to share some resources or would you prefer to sign up for more personalized advice?"
   ];
   
-  // Return a response based on the message count to provide variety
+  // Return a response based on message count to provide variety
   const randomIndex = Math.floor(Math.random() * responses.length);
   return responses[randomIndex];
 }
