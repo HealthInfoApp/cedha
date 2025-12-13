@@ -38,7 +38,7 @@ export default function ClinicalAIChatbot() {
   const handleGetStarted = () => {
     setIsLoading(true);
     setTimeout(() => {
-      window.location.href = '/login';
+      window.location.href = '/public-chat';
     }, 500);
   };
 
@@ -68,7 +68,7 @@ export default function ClinicalAIChatbot() {
               disabled={isLoading}
               className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 font-medium text-sm disabled:opacity-50"
             >
-              {isLoading ? 'Loading...' : 'Get Started'}
+              {isLoading ? 'Loading...' : 'Try Now'}
             </motion.button>
           </div>
         </div>
@@ -110,14 +110,14 @@ export default function ClinicalAIChatbot() {
                 disabled={isLoading}
                 className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 py-4 rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl disabled:opacity-50"
               >
-                Get Started Free
+                Try Now Free
               </button>
               
               <Link 
-                href="/login"
+                href="/public-chat"
                 className="bg-white text-slate-700 px-8 py-4 rounded-xl border border-slate-300 hover:border-slate-400 transition-all duration-300 font-semibold text-lg"
               >
-                Sign In
+                Try Demo
               </Link>
             </motion.div>
           </div>
