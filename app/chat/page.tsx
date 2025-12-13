@@ -2,6 +2,9 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
+import { Send, User, Bot, Plus, Menu, X, LogOut, MessageSquare, Settings, User as UserIcon } from 'lucide-react';
+import Markdown from 'react-markdown';
 
 interface User {
   id: number;
@@ -21,10 +24,11 @@ interface Conversation {
 }
 
 interface Message {
-  id: number;
+  id: number | string;
   message: string;
   is_user_message: boolean;
   created_at: string;
+  isStreaming?: boolean;
 }
 
 export default function ChatPage() {
@@ -32,12 +36,22 @@ export default function ChatPage() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConversation, setActiveConversation] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = 'auto';
+      inputRef.current.style.height = `${Math.min(inputRef.current.scrollHeight, 200)}px`;
+    }
+  }, [input]);
 
   useEffect(() => {
     checkAuth();
@@ -125,21 +139,32 @@ export default function ChatPage() {
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !activeConversation) return;
+    if (!input.trim() || !activeConversation || isSending) return;
 
-    const userMessage = newMessage;
-    setNewMessage('');
+    const userMessage = input;
+    setInput('');
     setIsSending(true);
 
     // Add user message immediately
     const tempUserMessage: Message = {
-      id: Date.now(), // Temporary ID
+      id: `temp-${Date.now()}`,
       message: userMessage,
       is_user_message: true,
       created_at: new Date().toISOString(),
     };
 
     setMessages(prev => [...prev, tempUserMessage]);
+
+    // Add temporary AI message for streaming
+    const tempAiMessage: Message = {
+      id: `temp-ai-${Date.now()}`,
+      message: '',
+      is_user_message: false,
+      created_at: new Date().toISOString(),
+      isStreaming: true,
+    };
+
+    setMessages(prev => [...prev, tempAiMessage]);
 
     try {
       const response = await fetch(`/api/chat/conversations/${activeConversation}/messages`, {
@@ -153,58 +178,125 @@ export default function ChatPage() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        // Replace temporary message with actual message from server
-        setMessages(prev => [...prev.filter(m => m.id !== tempUserMessage.id), ...data.messages]);
-        
-        // Update conversation list with new title if it's the first message
-        if (messages.length === 0) {
-          loadConversations();
+        const reader = response.body?.getReader();
+        if (reader) {
+          const decoder = new TextDecoder();
+          let aiResponse = '';
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            aiResponse += chunk;
+
+            // Update the streaming message
+            setMessages(prev => {
+              const newMessages = [...prev];
+              const aiMessageIndex = newMessages.findIndex(m => m.id === tempAiMessage.id);
+              if (aiMessageIndex !== -1) {
+                newMessages[aiMessageIndex] = {
+                  ...newMessages[aiMessageIndex],
+                  message: aiResponse,
+                };
+              }
+              return newMessages;
+            });
+          }
+
+          // Final update to mark streaming as complete
+          setMessages(prev => {
+            const newMessages = [...prev];
+            const aiMessageIndex = newMessages.findIndex(m => m.id === tempAiMessage.id);
+            if (aiMessageIndex !== -1) {
+              newMessages[aiMessageIndex] = {
+                ...newMessages[aiMessageIndex],
+                id: Date.now(),
+                isStreaming: false,
+              };
+            }
+            return newMessages;
+          });
         }
       } else {
-        // Remove temporary message if failed
-        setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id));
-        alert('Failed to send message. Please try again.');
+        // Remove temporary messages if failed
+        setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id && m.id !== tempAiMessage.id));
+        throw new Error('Failed to send message');
       }
     } catch (error) {
-      // Remove temporary message if error
-      setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id));
-      alert('Network error. Please check your connection.');
+      console.error('Error sending message:', error);
+      // Remove temporary messages if error
+      setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id && m.id !== tempAiMessage.id));
+      
+      // Add error message
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `error-${Date.now()}`,
+          message: 'Sorry, there was an error sending your message. Please try again.',
+          is_user_message: false,
+          created_at: new Date().toISOString(),
+        },
+      ]);
     } finally {
       setIsSending(false);
+      
+      // Update conversation list
+      loadConversations();
     }
   };
 
   const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/');
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(e);
+    }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading Chat...</p>
+          <p className="text-gray-600">Loading Chat...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen bg-slate-50">
+    <div className="flex h-screen bg-gray-50 text-gray-900">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} bg-white border-r border-slate-200 transition-all duration-300 flex flex-col`}>
-        <div className="p-4 border-b border-slate-200">
+      <div 
+        className={`fixed inset-y-0 left-0 z-30 w-80 bg-gray-900 text-white transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 flex flex-col`}
+      >
+        <div className="p-4 border-b border-gray-800">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Chat History</h2>
+            <h2 className="text-xl font-bold">Cedha AI</h2>
             <button
-              onClick={() => setSidebarOpen(false)}
-              className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              onClick={() => setIsSidebarOpen(false)}
+              className="md:hidden p-1 rounded-md hover:bg-gray-800"
             >
-              <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X size={20} />
             </button>
           </div>
           <button
@@ -293,14 +385,12 @@ export default function ChatPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
 
-              {!sidebarOpen && (
+              {!isSidebarOpen && (
                 <button
-                  onClick={() => setSidebarOpen(true)}
+                  onClick={() => setIsSidebarOpen(true)}
                   className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
                 >
-                  <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
+                  <Menu size={20} />
                 </button>
               )}
               <h1 className="text-xl font-semibold text-slate-900">
@@ -332,14 +422,14 @@ export default function ChatPage() {
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-lg mx-auto">
                   <button
-                    onClick={() => setNewMessage('Create a precision meal plan for a 55-year-old with T2DM and CKD stage 3.')}
+                    onClick={() => setInput('Create a precision meal plan for a 55-year-old with T2DM and CKD stage 3.')}
                     className="p-3 text-left bg-white border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <div className="font-medium text-slate-900">Personalized Plan</div>
                     <div className="text-sm text-slate-600">Energy, protein, and macros by condition</div>
                   </button>
                   <button
-                    onClick={() => setNewMessage('List key interactions between warfarin and vitamin K–rich foods, with counseling tips.')}
+                    onClick={() => setInput('List key interactions between warfarin and vitamin K–rich foods, with counseling tips.')}
                     className="p-3 text-left bg-white border border-slate-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
                   >
                     <div className="font-medium text-slate-900">Diet–Drug Interactions</div>
@@ -377,26 +467,26 @@ export default function ChatPage() {
         {/* Input Area */}
         <div className="border-t border-slate-200 bg-white p-4">
           <form onSubmit={sendMessage} className="flex space-x-4">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
+            <textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Type your nutrition or clinical question here..."
-              className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              rows={1}
+              className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none max-h-32"
               disabled={isSending}
             />
 
             <button
               type="submit"
-              disabled={!newMessage.trim() || isSending || !activeConversation}
+              disabled={!input.trim() || isSending || !activeConversation}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSending ? (
                 <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                </svg>
+                <Send size={20} />
               )}
             </button>
           </form>

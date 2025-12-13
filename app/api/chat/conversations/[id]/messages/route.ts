@@ -132,17 +132,34 @@ export async function POST(
 
       await connection.execute('COMMIT');
 
-      // Get the newly added messages
-      const [newMessages] = await connection.execute(
-        `SELECT id, message, is_user_message, created_at 
-         FROM chat_messages 
-         WHERE conversation_id = ? 
-         ORDER BY id DESC LIMIT 2`,
-        [conversationId]
-      );
+      // Create a streaming response
+      const stream = new TransformStream();
+      const writer = stream.writable.getWriter();
+      const encoder = new TextEncoder();
 
-      return NextResponse.json({ 
-        messages: (newMessages as any[]).reverse() 
+      // Start streaming in the background
+      (async () => {
+        try {
+          // Stream the AI response character by character
+          const chunkSize = 5;
+          for (let i = 0; i < aiResponse.length; i += chunkSize) {
+            const chunk = aiResponse.slice(i, i + chunkSize);
+            await writer.write(encoder.encode(chunk));
+            // Small delay for streaming effect
+            await new Promise(resolve => setTimeout(resolve, 10));
+          }
+        } catch (error) {
+          console.error('Streaming error:', error);
+          await writer.write(encoder.encode('Error generating response'));
+        } finally {
+          await writer.close();
+        }
+      })();
+
+      return new NextResponse(stream.readable, {
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
       });
 
     } catch (error) {
