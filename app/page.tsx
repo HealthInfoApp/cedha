@@ -136,21 +136,14 @@ export default function ClinicalAIChatbot() {
                     <Home size={20} />
                     <span>Home</span>
                   </Link>
+                  
                   <Link
                     href="/public-chat"
                     className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
                     onClick={() => setIsSidebarOpen(false)}
                   >
-                    <MessageSquare size={20} />
-                    <span>Try Now</span>
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
-                    onClick={() => setIsSidebarOpen(false)}
-                  >
                     <User size={20} />
-                    <span>Sign In</span>
+                    <span>Try Now </span>
                   </Link>
                   <Link
                     href="/signup"
