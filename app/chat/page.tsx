@@ -384,15 +384,6 @@ export default function ChatPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 md:gap-3">
-            <button className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400">
-              <div className="w-4 h-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded"></div>
-              Pro Features
-            </button>
-            <div className="text-xs md:text-sm text-slate-500 flex items-center gap-2 px-2 md:px-3 py-1 bg-amber-50 rounded-full border border-amber-200">
-              <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
-              <span className="text-amber-700 font-medium hidden md:inline">5 consultations left</span>
-              <span className="text-amber-700 font-medium md:hidden">5 left</span>
-            </div>
             <div className="w-7 h-7 md:w-8 md:h-8 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full flex items-center justify-center cursor-pointer hover:from-slate-300 hover:to-slate-400 transition-all duration-200 shadow-sm hover:shadow-md">
               <User size={14} className="text-slate-600 md:hidden" />
               <User size={16} className="text-slate-600 hidden md:block" />
@@ -509,7 +500,13 @@ export default function ChatPage() {
                           : 'bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 text-slate-800 rounded-bl-none shadow-sm backdrop-blur-sm'
                       }`}
                     >
-                      <div className="whitespace-pre-wrap">{message.message}</div>
+                      {!message.is_user_message ? (
+                        <div className="prose prose-sm max-w-none">
+                          <Markdown>{message.message}</Markdown>
+                        </div>
+                      ) : (
+                        <div className="whitespace-pre-wrap">{message.message}</div>
+                      )}
                       <div className={`text-xs mt-2 ${
                         message.is_user_message ? 'text-blue-200' : 'text-emerald-600'
                       }`}>

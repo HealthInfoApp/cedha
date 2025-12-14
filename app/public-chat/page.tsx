@@ -192,7 +192,7 @@ export default function PublicChatPage() {
                 <User size={18} className="text-white" />
               </div>
               <div className="flex-1">
-                <div className="text-sm font-medium text-slate-900">Demo User</div>
+                <div className="text-sm font-medium text-slate-900">Public User</div>
                 <div className="text-xs text-slate-500">dietech.ai</div>
               </div>
             </div>
