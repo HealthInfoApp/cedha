@@ -79,10 +79,10 @@ export default function ClinicalAIChatbot() {
               </motion.button>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Sidebar Toggle Button */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+              className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
             >
               {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
