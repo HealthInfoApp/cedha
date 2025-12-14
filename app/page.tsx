@@ -136,14 +136,21 @@ export default function ClinicalAIChatbot() {
                     <Home size={20} />
                     <span>Home</span>
                   </Link>
-                  
                   <Link
                     href="/public-chat"
                     className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
                     onClick={() => setIsSidebarOpen(false)}
                   >
+                    <MessageSquare size={20} />
+                    <span>Try Now</span>
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
+                    onClick={() => setIsSidebarOpen(false)}
+                  >
                     <User size={20} />
-                    <span>Try Now </span>
+                    <span>Sign In</span>
                   </Link>
                   <Link
                     href="/signup"
@@ -213,10 +220,10 @@ export default function ClinicalAIChatbot() {
               </button>
               
               <Link 
-                href="/login"
+                href="/public-chat"
                 className="bg-white text-slate-700 px-8 py-4 rounded-xl border border-slate-300 hover:border-slate-400 transition-all duration-300 font-semibold text-lg"
               >
-                Sign In
+                Try Now
               </Link>
             </motion.div>
           </div>
