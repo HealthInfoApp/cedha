@@ -278,7 +278,7 @@ export default function ChatPage() {
       {/* Mobile Sidebar Overlay */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          className="fixed inset-0 bg-white bg-opacity-30 backdrop-blur-sm z-20 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -364,35 +364,40 @@ export default function ChatPage() {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="border-b border-slate-200 px-4 py-3 flex items-center justify-between bg-white shadow-sm">
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden p-2 rounded-md hover:bg-slate-100 transition-colors">
+        <header className="border-b border-slate-200 px-4 py-3 flex items-center justify-between bg-white shadow-sm md:px-6">
+          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden p-2.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md">
             {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-center justify-center md:justify-start">
             <div className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 px-4 py-2 rounded-lg transition-colors group">
               <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
                 <span className="text-white font-bold text-sm">D</span>
               </div>
-              <div>
+              <div className="hidden md:block">
                 <h1 className="text-lg font-semibold text-slate-900">DietechAI</h1>
                 <p className="text-xs text-slate-500">Clinical Nutrition Assistant</p>
               </div>
-              <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600 transition-colors" />
+              <div className="md:hidden">
+                <h1 className="text-base font-semibold text-slate-900">DietechAI</h1>
+              </div>
+              <ChevronDown size={16} className="text-slate-400 group-hover:text-slate-600 transition-colors hidden md:block" />
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400">
+          <div className="flex items-center gap-2 md:gap-3">
+            <button className="hidden md:flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400">
               <div className="w-4 h-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded"></div>
               Pro Features
             </button>
-            <div className="text-sm text-slate-500 flex items-center gap-2 px-3 py-1 bg-amber-50 rounded-full border border-amber-200">
+            <div className="text-xs md:text-sm text-slate-500 flex items-center gap-2 px-2 md:px-3 py-1 bg-amber-50 rounded-full border border-amber-200">
               <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
-              <span className="text-amber-700 font-medium">5 consultations left</span>
+              <span className="text-amber-700 font-medium hidden md:inline">5 consultations left</span>
+              <span className="text-amber-700 font-medium md:hidden">5 left</span>
             </div>
-            <div className="w-8 h-8 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full flex items-center justify-center cursor-pointer hover:from-slate-300 hover:to-slate-400 transition-all duration-200 shadow-sm hover:shadow-md">
-              <User size={16} className="text-slate-600" />
+            <div className="w-7 h-7 md:w-8 md:h-8 bg-gradient-to-br from-slate-200 to-slate-300 rounded-full flex items-center justify-center cursor-pointer hover:from-slate-300 hover:to-slate-400 transition-all duration-200 shadow-sm hover:shadow-md">
+              <User size={14} className="text-slate-600 md:hidden" />
+              <User size={16} className="text-slate-600 hidden md:block" />
             </div>
-            <button className="p-2 rounded-lg hover:bg-slate-100 transition-colors group">
+            <button className="hidden md:p-2 rounded-lg hover:bg-slate-100 transition-colors group">
               <svg className="w-5 h-5 text-slate-600 group-hover:text-slate-800 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
