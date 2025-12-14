@@ -501,12 +501,12 @@ export default function ChatPage() {
                       className={`px-4 py-3 rounded-2xl ${
                         message.is_user_message
                           ? 'bg-blue-600 text-white rounded-br-none'
-                          : 'bg-white border border-gray-200 rounded-bl-none shadow-sm'
+                          : 'bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 text-slate-800 rounded-bl-none shadow-sm backdrop-blur-sm'
                       }`}
                     >
                       <div className="whitespace-pre-wrap">{message.message}</div>
                       <div className={`text-xs mt-2 ${
-                        message.is_user_message ? 'text-blue-200' : 'text-gray-500'
+                        message.is_user_message ? 'text-blue-200' : 'text-emerald-600'
                       }`}>
                         {new Date(message.created_at).toLocaleTimeString()}
                       </div>
@@ -519,7 +519,7 @@ export default function ChatPage() {
                   <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center mr-3">
                     <Bot size={16} className="animate-pulse" />
                   </div>
-                  <div className="px-4 py-3 bg-white border border-gray-200 rounded-2xl rounded-bl-none shadow-sm">
+                  <div className="px-4 py-3 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 text-slate-800 rounded-2xl rounded-bl-none shadow-sm backdrop-blur-sm">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" />
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-100" />

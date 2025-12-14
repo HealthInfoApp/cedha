@@ -139,9 +139,17 @@ export default function PublicChatPage() {
 
   return (
     <div className="flex h-screen bg-gray-50">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-20 w-64 bg-white border-r border-slate-200 text-slate-900 transition-transform duration-300 ease-in-out transform ${
+        className={`fixed inset-y-0 left-0 z-30 w-64 bg-white border-r border-slate-200 text-slate-900 transition-transform duration-300 ease-in-out transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } md:relative md:translate-x-0`}
       >
@@ -342,7 +350,7 @@ export default function PublicChatPage() {
                       className={`px-4 py-3 rounded-2xl ${
                         message.role === 'user'
                           ? 'bg-blue-600 text-white rounded-br-none'
-                          : 'bg-white border border-gray-200 rounded-bl-none shadow-sm'
+                          : 'bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 text-slate-800 rounded-bl-none shadow-sm backdrop-blur-sm'
                       }`}
                     >
                       {message.role === 'assistant' ? (
@@ -353,7 +361,7 @@ export default function PublicChatPage() {
                         <p className="whitespace-pre-wrap">{message.content}</p>
                       )}
                       <div className={`text-xs mt-2 ${
-                        message.role === 'user' ? 'text-blue-200' : 'text-gray-500'
+                        message.role === 'user' ? 'text-blue-200' : 'text-emerald-600'
                       }`}>
                         {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
@@ -366,7 +374,7 @@ export default function PublicChatPage() {
                   <div className="w-8 h-8 rounded-full bg-gray-200 text-gray-700 flex items-center justify-center mr-3">
                     <Bot size={16} className="animate-pulse" />
                   </div>
-                  <div className="px-4 py-3 bg-white border border-gray-200 rounded-2xl rounded-bl-none shadow-sm">
+                  <div className="px-4 py-3 bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 text-slate-800 rounded-2xl rounded-bl-none shadow-sm backdrop-blur-sm">
                     <div className="flex space-x-2">
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" />
                       <div className="w-2 h-2 bg-gray-300 rounded-full animate-bounce delay-100" />
