@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Bot, Check, Copy, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { ChatMessage } from './types';
@@ -59,7 +60,20 @@ export function ChatBubble({ message }: { message: ChatMessage }) {
             <p className="whitespace-pre-wrap">{message.content}</p>
           ) : (
             <div className="md">
-              <Markdown>{message.content}</Markdown>
+              <Markdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  // Wrap tables so wide ones scroll horizontally instead of
+                  // overflowing the bubble on small screens.
+                  table: ({ children, ...props }) => (
+                    <div className="md-table-wrap scrollbar-slim">
+                      <table {...props}>{children}</table>
+                    </div>
+                  ),
+                }}
+              >
+                {message.content}
+              </Markdown>
             </div>
           )}
         </div>

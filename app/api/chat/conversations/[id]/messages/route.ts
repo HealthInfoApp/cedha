@@ -215,7 +215,15 @@ Provide concise, evidence-based guidance for:
 - Medical nutrition therapy (eg, T2DM, CKD, CVD, obesity, oncology)
 - Energy/protein needs, macro/micronutrients, and meal planning
 - Diet–drug and nutrient interactions and monitoring
-Always include safety notes and contraindications when relevant. Keep responses factual and succinct.`;
+Always include safety notes and contraindications when relevant. Keep responses factual and succinct.
+
+Formatting — reply in GitHub-Flavored Markdown so the app renders it cleanly:
+- Organize answers with short headings (##), **bold** key terms, and bullet or numbered lists.
+- When presenting structured or comparative data (meal plans, nutrient targets, dosing, drug–nutrient interactions), use a Markdown table. ALWAYS include a header row followed by a separator row of dashes, or the table will not render:
+  | Nutrient | Target | Notes |
+  | --- | --- | --- |
+  | Protein | 1.2 g/kg/day | Adjust for CKD stage |
+- Put every table row on its own line. Keep tables compact (aim for 2–4 columns and concise cells) so they display well on small screens. Never wrap a table in a code block.`;
 
   if (!apiKey) {
     return generateAIResponse(userMessage);
