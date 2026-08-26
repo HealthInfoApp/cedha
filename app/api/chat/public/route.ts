@@ -25,7 +25,7 @@ setInterval(resetOldCounts, 60 * 60 * 1000);
 // Groq-backed nutrition AI response
 async function getNutritionAIResponse(userMessage: string): Promise<string> {
   const apiKey = process.env.GROQ_API_KEY;
-  const model = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
+  const model = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
   const maxTokens = Number(process.env.GROQ_MAX_TOKENS || 2048);
   const endpoint = 'https://api.groq.com/openai/v1/chat/completions';
 
