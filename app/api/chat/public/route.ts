@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connection from '@/lib/db';
+import { screenUserMessage } from '@/lib/contentGuard';
 
 // In-memory store for demo purposes
 // In production, consider using a proper caching solution like Redis
@@ -127,9 +128,13 @@ export async function POST(request: NextRequest) {
     
     // Increment message count
     ipData.count += 1;
-    
-    // Generate AI response using Groq
-    const aiResponse = await getNutritionAIResponse(message);
+
+    // Deterministic safety / scope pre-filter (runs before the model, so
+    // crisis and off-topic handling hold even without an API key).
+    const guarded = screenUserMessage(message);
+
+    // Generate AI response using Groq (unless the guard already answered)
+    const aiResponse = guarded ?? await getNutritionAIResponse(message);
     
     // Create a transform stream for streaming response
     const stream = new TransformStream();

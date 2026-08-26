@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyToken } from '@/lib/auth';
 import connection from '@/lib/db';
+import { screenUserMessage } from '@/lib/contentGuard';
 
 export async function GET(
   request: NextRequest,
@@ -112,10 +113,17 @@ export async function POST(
         );
       }
 
-      // Generate AI response (use Groq if configured, else simulated)
-      const aiResponse = process.env.GROQ_API_KEY
-        ? await getNutritionAIResponse(message)
-        : generateAIResponse(message);
+      // Deterministic safety / scope pre-filter (runs before the model, so
+      // crisis and off-topic handling hold even without an API key).
+      const guarded = screenUserMessage(message);
+
+      // Generate AI response (use Groq if configured, else simulated),
+      // unless the guard already produced a response.
+      const aiResponse =
+        guarded ??
+        (process.env.GROQ_API_KEY
+          ? await getNutritionAIResponse(message)
+          : generateAIResponse(message));
 
       // Add AI response
       await connection.execute(
