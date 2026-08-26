@@ -2,7 +2,13 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { Camera, LogOut, MessageSquare, LayoutDashboard } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Input, Label } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Avatar } from '@/components/ui/avatar';
+import { AppNavbar } from '@/components/app-navbar';
+import { cn } from '@/lib/utils';
 
 interface User {
   id: number;
@@ -60,44 +66,36 @@ export default function ProfilePage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       showMessage('Please select an image file (JPEG, PNG, etc.)', 'error');
       return;
     }
 
-    // Validate file size (2MB limit)
     if (file.size > 2 * 1024 * 1024) {
       showMessage('Image size must be less than 2MB', 'error');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('profileImage', file);
+    const uploadData = new FormData();
+    uploadData.append('profileImage', file);
 
     try {
       const response = await fetch('/api/user/upload-profile-image', {
         method: 'POST',
-        body: formData,
+        body: uploadData,
       });
 
       if (response.ok) {
         const data = await response.json();
-        setFormData(prev => ({
-          ...prev,
-          profile_image: data.imageUrl,
-        }));
-        setUser(prev => prev ? { ...prev, profile_image: data.imageUrl } : null);
+        setFormData((prev) => ({ ...prev, profile_image: data.imageUrl }));
+        setUser((prev) => (prev ? { ...prev, profile_image: data.imageUrl } : null));
         showMessage('Profile image updated successfully!', 'success');
       } else {
         const error = await response.json();
@@ -115,9 +113,7 @@ export default function ProfilePage() {
     try {
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
@@ -149,241 +145,174 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-background">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading Profile...</p>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-muted">Loading profile…</p>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg overflow-hidden bg-white flex items-center justify-center">
-                <Image src="/dietech.png" alt="DietechAI" width={32} height={32} />
-              </div>
-              <span className="font-bold text-xl text-slate-800">
-                DietechAI Profile
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => router.push(user?.user_type === 'admin' ? '/dashboard/admin' : '/chat')}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-              >
-                {user?.user_type === 'admin' ? 'Admin Dashboard' : 'Back to Chat'}
-              </button>
-              <button 
-                onClick={handleLogout}
-                className="bg-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors text-sm"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+  const isAdmin = user?.user_type === 'admin';
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Message Alert */}
+  return (
+    <div className="min-h-[100dvh] bg-background text-foreground">
+      <AppNavbar title="DietechAI Profile">
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() => router.push(isAdmin ? '/dashboard/admin' : '/chat')}
+        >
+          {isAdmin ? <LayoutDashboard size={16} /> : <MessageSquare size={16} />}
+          <span className="hidden sm:inline">{isAdmin ? 'Admin Dashboard' : 'Back to Chat'}</span>
+        </Button>
+        <Button size="sm" variant="ghost" onClick={handleLogout}>
+          <LogOut size={16} />
+          <span className="hidden sm:inline">Logout</span>
+        </Button>
+      </AppNavbar>
+
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         {message && (
-          <div className={`mb-6 p-4 rounded-lg ${
-            messageType === 'success' 
-              ? 'bg-green-50 border border-green-200 text-green-800'
-              : 'bg-red-50 border border-red-200 text-red-800'
-          }`}>
+          <div
+            className={cn(
+              'mb-6 rounded-xl border px-4 py-3 text-sm',
+              messageType === 'success'
+                ? 'border-success-border bg-success-surface text-success'
+                : 'border-danger-border bg-danger-surface text-danger'
+            )}
+          >
             {message}
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Profile Image Section */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Profile Photo</h3>
-              
-              <div className="flex flex-col items-center">
-                <div className="relative mb-4">
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 flex items-center justify-center text-white text-2xl font-bold">
-                    {formData.profile_image ? (
-                      <img 
-                        src={formData.profile_image} 
-                        alt={formData.full_name}
-                        className="w-32 h-32 rounded-full object-cover"
-                      />
-                    ) : (
-                      formData.full_name?.charAt(0).toUpperCase() || 'U'
-                    )}
-                  </div>
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors shadow-lg"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  </button>
-                </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          {/* Photo + account */}
+          <Card className="p-6 lg:col-span-1">
+            <h3 className="mb-4 text-lg font-semibold">Profile Photo</h3>
+            <div className="flex flex-col items-center">
+              <div className="relative mb-4">
+                <Avatar name={formData.full_name} src={formData.profile_image || null} size={128} />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  aria-label="Upload photo"
+                  className="absolute bottom-0 right-0 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 text-white shadow-lift transition-transform hover:scale-105 dark:from-emerald-500 dark:to-teal-500"
+                >
+                  <Camera size={16} />
+                </button>
+              </div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
+              <p className="text-center text-sm text-muted">
+                Click the camera icon to upload a new profile photo. Max 2MB.
+              </p>
+            </div>
 
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
-
-                <p className="text-sm text-slate-600 text-center">
-                  Click the camera icon to upload a new profile photo. Max 2MB.
+            <div className="mt-6 space-y-3 border-t border-border pt-6 text-sm">
+              <h4 className="font-medium text-foreground">Account Information</h4>
+              <div>
+                <span className="text-subtle">Email</span>
+                <p className="font-medium">{user?.email}</p>
+              </div>
+              <div>
+                <span className="text-subtle">User Type</span>
+                <p className="font-medium capitalize">{user?.user_type?.replace('-', ' ')}</p>
+              </div>
+              <div>
+                <span className="text-subtle">Member Since</span>
+                <p className="font-medium">
+                  {user ? new Date(user.created_at).toLocaleDateString() : ''}
                 </p>
               </div>
-
-              <div className="mt-6 pt-6 border-t border-slate-200">
-                <h4 className="font-medium text-slate-900 mb-2">Account Information</h4>
-                <div className="space-y-2 text-sm">
-                  <div>
-                    <span className="text-slate-600">Email:</span>
-                    <p className="font-medium">{user?.email}</p>
-                  </div>
-                  <div>
-                    <span className="text-slate-600">User Type:</span>
-                    <p className="font-medium capitalize">{user?.user_type?.replace('-', ' ')}</p>
-                  </div>
-                  <div>
-                    <span className="text-slate-600">Member Since:</span>
-                    <p className="font-medium">
-                      {user ? new Date(user.created_at).toLocaleDateString() : ''}
-                    </p>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
+          </Card>
 
-          {/* Profile Form Section */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-6">Profile Information</h3>
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Form + security */}
+          <div className="space-y-6 lg:col-span-2">
+            <Card className="p-6">
+              <h3 className="mb-6 text-lg font-semibold">Profile Information</h3>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                   <div>
-                    <label htmlFor="full_name" className="block text-sm font-medium text-slate-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
+                    <Label htmlFor="full_name">Full Name *</Label>
+                    <Input
                       id="full_name"
                       name="full_name"
                       type="text"
                       required
                       value={formData.full_name}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                       placeholder="Enter your full name"
                     />
                   </div>
-
                   <div>
-                    <label htmlFor="phone_number" className="block text-sm font-medium text-slate-700 mb-2">
-                      Phone Number
-                    </label>
-                    <input
+                    <Label htmlFor="phone_number">Phone Number</Label>
+                    <Input
                       id="phone_number"
                       name="phone_number"
                       type="tel"
                       value={formData.phone_number}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                       placeholder="Enter your phone number"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="specialization" className="block text-sm font-medium text-slate-700 mb-2">
-                    Specialization / Field
-                  </label>
-                  <input
+                  <Label htmlFor="specialization">Specialization / Field</Label>
+                  <Input
                     id="specialization"
                     name="specialization"
                     type="text"
                     value={formData.specialization}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                     placeholder="e.g., Cardiology, Pediatrics, etc."
                   />
-                  <p className="mt-1 text-sm text-slate-500">
-                    Leave empty if you're a medical student or not specialized
+                  <p className="mt-1.5 text-sm text-subtle">
+                    Leave empty if you&apos;re a medical student or not specialized.
                   </p>
                 </div>
 
-                <div className="pt-6 border-t border-slate-200">
-                  <div className="flex justify-end space-x-4">
-                    <button
-                      type="button"
-                      onClick={() => router.back()}
-                      className="px-6 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSaving}
-                      className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isSaving ? (
-                        <div className="flex items-center space-x-2">
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          <span>Saving...</span>
-                        </div>
-                      ) : (
-                        'Save Changes'
-                      )}
-                    </button>
-                  </div>
+                <div className="flex justify-end gap-3 border-t border-border pt-5">
+                  <Button type="button" variant="outline" onClick={() => router.back()}>
+                    Cancel
+                  </Button>
+                  <Button type="submit" loading={isSaving}>
+                    {isSaving ? 'Saving…' : 'Save Changes'}
+                  </Button>
                 </div>
               </form>
-            </div>
+            </Card>
 
-            {/* Security Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mt-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Security</h3>
-              <div className="space-y-4">
+            <Card className="p-6">
+              <h3 className="mb-4 text-lg font-semibold">Security</h3>
+              <div className="divide-y divide-border">
                 <div className="flex items-center justify-between py-3">
                   <div>
-                    <h4 className="font-medium text-slate-900">Change Password</h4>
-                    <p className="text-sm text-slate-600">Update your password regularly for security</p>
+                    <h4 className="font-medium text-foreground">Change Password</h4>
+                    <p className="text-sm text-muted">Update your password regularly for security.</p>
                   </div>
-                  <button
-                    onClick={() => router.push('/change-password')}
-                    className="bg-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors text-sm"
-                  >
+                  <Button size="sm" variant="secondary" onClick={() => router.push('/change-password')}>
                     Change Password
-                  </button>
+                  </Button>
                 </div>
-
-                <div className="flex items-center justify-between py-3 border-t border-slate-200">
+                <div className="flex items-center justify-between py-3">
                   <div>
-                    <h4 className="font-medium text-slate-900">Two-Factor Authentication</h4>
-                    <p className="text-sm text-slate-600">Add an extra layer of security to your account</p>
+                    <h4 className="font-medium text-foreground">Two-Factor Authentication</h4>
+                    <p className="text-sm text-muted">Add an extra layer of security to your account.</p>
                   </div>
-                  <button
-                    disabled
-                    className="bg-slate-300 text-slate-500 px-4 py-2 rounded-lg text-sm cursor-not-allowed"
-                  >
+                  <Button size="sm" variant="outline" disabled>
                     Coming Soon
-                  </button>
+                  </Button>
                 </div>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </div>

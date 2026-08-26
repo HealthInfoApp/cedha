@@ -29,10 +29,10 @@ export default function DashboardRedirect() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+    <div className="flex min-h-[100dvh] items-center justify-center bg-background">
       <div className="text-center">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-slate-600">Redirecting...</p>
+        <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <p className="text-muted">Redirecting…</p>
       </div>
     </div>
   );

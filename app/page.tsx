@@ -1,302 +1,262 @@
 'use client';
 
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, Home, MessageSquare, Settings, LogOut, User, Shield, Activity } from 'lucide-react';
+import {
+  Salad,
+  Dna,
+  Pill,
+  ClipboardList,
+  Menu,
+  X,
+  Home,
+  MessageSquare,
+  User,
+  Shield,
+  ArrowRight,
+  Sparkles,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+
+const features = [
+  {
+    icon: Salad,
+    title: 'Personalized Nutrition',
+    description: 'Precision meal plans and macronutrient targets tailored to patient profiles.',
+  },
+  {
+    icon: Dna,
+    title: 'Nutrigenomics Insights',
+    description: 'Translate genetic markers into actionable dietary recommendations.',
+  },
+  {
+    icon: Pill,
+    title: 'Diet–Drug Interactions',
+    description: 'Identify nutrient–medication interactions and contraindications.',
+  },
+  {
+    icon: ClipboardList,
+    title: 'Clinical Guidelines',
+    description: 'Evidence-based protocols for obesity, diabetes, CKD, CVD, and more.',
+  },
+];
 
 export default function ClinicalAIChatbot() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const features = [
-    {
-      icon: '🥗',
-      title: 'Personalized Nutrition',
-      description: 'Precision meal plans and macronutrient targets tailored to patient profiles',
-      gradient: 'from-emerald-500 to-teal-500'
-    },
-    {
-      icon: '🧬',
-      title: 'Nutrigenomics Insights',
-      description: 'Translate genetic markers into actionable dietary recommendations',
-      gradient: 'from-purple-500 to-blue-500'
-    },
-    {
-      icon: '💊',
-      title: 'Diet–Drug Interactions',
-      description: 'Identify nutrient–medication interactions and contraindications',
-      gradient: 'from-orange-500 to-red-500'
-    },
-    {
-      icon: '📑',
-      title: 'Clinical Guidelines',
-      description: 'Evidence-based protocols for obesity, diabetes, CKD, CVD, and more',
-      gradient: 'from-indigo-500 to-purple-500'
-    }
-  ];
-
   const handleGetStarted = () => {
     setIsLoading(true);
     setTimeout(() => {
       window.location.href = '/login';
-    }, 500);
+    }, 400);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
-      {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center space-x-3"
-            >
-              <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-white">
-                <Image src="/dietech.png" alt="DietechAI" width={32} height={32} priority />
-              </div>
-              <span className="font-bold text-xl text-slate-800">
-                DietechAI
-              </span>
-            </motion.div>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <Link href="/public-chat" className="text-slate-600 hover:text-slate-900 transition-colors font-medium">
-                Try Now
-              </Link>
-              <motion.button 
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                onClick={handleGetStarted}
-                disabled={isLoading}
-                className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 font-medium text-sm disabled:opacity-50"
-              >
-                {isLoading ? 'Loading...' : 'Get Started'}
-              </motion.button>
+    <div className="min-h-[100dvh] bg-background text-foreground">
+      {/* Navbar */}
+      <nav className="sticky top-0 z-50 border-b border-border bg-surface/70 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-white">
+              <Image src="/dietech.png" alt="DietechAI" width={32} height={32} priority />
             </div>
+            <span className="font-display text-xl font-semibold">DietechAI</span>
+          </div>
 
-            {/* Sidebar Toggle Button */}
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
+          <div className="hidden items-center gap-2 md:flex">
+            <Link
+              href="/public-chat"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
             >
-              {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+              Try Now
+            </Link>
+            <Link
+              href="/login"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
+            >
+              Sign In
+            </Link>
+            <ThemeToggle />
+            <Button size="sm" onClick={handleGetStarted} loading={isLoading}>
+              Get Started
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-1 md:hidden">
+            <ThemeToggle />
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              aria-label="Open menu"
+              className="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl text-muted transition-colors hover:bg-elevated hover:text-foreground"
+            >
+              <Menu size={22} />
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Sidebar */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {isSidebarOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+              className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm md:hidden"
               onClick={() => setIsSidebarOpen(false)}
             />
-            
-            {/* Sidebar */}
             <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-200 z-50 md:hidden"
+              transition={{ type: 'spring', damping: 28, stiffness: 260 }}
+              className="fixed inset-y-0 left-0 z-50 w-72 border-r border-border bg-surface p-4 md:hidden"
             >
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center bg-white">
-                      <Image src="/dietech.png" alt="DietechAI" width={32} height={32} priority />
-                    </div>
-                    <span className="font-bold text-xl text-slate-800">DietechAI</span>
+              <div className="mb-8 flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-white">
+                    <Image src="/dietech.png" alt="DietechAI" width={32} height={32} />
                   </div>
-                  <button
-                    onClick={() => setIsSidebarOpen(false)}
-                    className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-                  >
-                    <X size={20} />
-                  </button>
+                  <span className="font-display text-lg font-semibold">DietechAI</span>
                 </div>
-
-                <nav className="space-y-2">
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  aria-label="Close menu"
+                  className="inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-muted hover:bg-elevated"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+              <nav className="space-y-1">
+                {[
+                  { href: '/', label: 'Home', icon: Home },
+                  { href: '/public-chat', label: 'Try Now', icon: MessageSquare },
+                  { href: '/login', label: 'Sign In', icon: User },
+                  { href: '/signup', label: 'Sign Up', icon: Shield },
+                ].map(({ href, label, icon: Icon }) => (
                   <Link
-                    href="/"
-                    className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
+                    key={href}
+                    href={href}
                     onClick={() => setIsSidebarOpen(false)}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted transition-colors hover:bg-elevated hover:text-foreground"
                   >
-                    <Home size={20} />
-                    <span>Home</span>
+                    <Icon size={19} />
+                    {label}
                   </Link>
-                  <Link
-                    href="/public-chat"
-                    className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
-                    onClick={() => setIsSidebarOpen(false)}
-                  >
-                    <MessageSquare size={20} />
-                    <span>Try Now</span>
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
-                    onClick={() => setIsSidebarOpen(false)}
-                  >
-                    <User size={20} />
-                    <span>Sign In</span>
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors text-slate-700"
-                    onClick={() => setIsSidebarOpen(false)}
-                  >
-                    <Shield size={20} />
-                    <span>Sign Up</span>
-                  </Link>
-                </nav>
-
-                <div className="mt-8 pt-8 border-t border-slate-200">
-                  <motion.button
-                    onClick={() => {
-                      handleGetStarted();
-                      setIsSidebarOpen(false);
-                    }}
-                    disabled={isLoading}
-                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-3 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 font-medium disabled:opacity-50"
-                  >
-                    {isLoading ? 'Loading...' : 'Get Started'}
-                  </motion.button>
-                </div>
+                ))}
+              </nav>
+              <div className="mt-8 border-t border-border pt-6">
+                <Button
+                  className="w-full"
+                  loading={isLoading}
+                  onClick={() => {
+                    handleGetStarted();
+                    setIsSidebarOpen(false);
+                  }}
+                >
+                  Get Started
+                </Button>
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-4xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight"
-            >
-              Your AI
-              <span className="block bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                Clinical Nutrition Partner
-              </span>
-            </motion.h1>
-            
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto"
-            >
-              DietechAI delivers personalized medicine for nutrition: precision diet therapy, patient-specific counseling, and evidence-based guidance for clinical practice.
-            </motion.p>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            >
-              <button 
-                onClick={handleGetStarted}
-                disabled={isLoading}
-                className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-8 py-4 rounded-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl disabled:opacity-50"
-              >
-                Get Started Free
-              </button>
-              
-              <Link 
-                href="/public-chat"
-                className="bg-white text-slate-700 px-8 py-4 rounded-xl border border-slate-300 hover:border-slate-400 transition-all duration-300 font-semibold text-lg"
-              >
-                Try Now
-              </Link>
-            </motion.div>
-          </div>
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute -right-16 top-10 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl" />
+          <div className="absolute -left-16 bottom-0 h-72 w-72 rounded-full bg-teal-400/20 blur-3xl" />
         </div>
 
-        {/* Background Elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
-          <div className="absolute top-20 -right-10 w-72 h-72 bg-blue-200 rounded-full blur-3xl opacity-30"></div>
-          <div className="absolute bottom-20 -left-10 w-72 h-72 bg-cyan-200 rounded-full blur-3xl opacity-30"></div>
+        <div className="mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 md:py-28 lg:px-8">
+          <div className="animate-fade-up mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-xs font-medium text-muted shadow-soft">
+            <Sparkles size={14} className="text-primary" />
+            AI-powered clinical nutrition
+          </div>
+
+          <h1
+            style={{ animationDelay: '0.05s' }}
+            className="animate-fade-up font-display text-4xl font-bold leading-tight md:text-6xl"
+          >
+            Your AI
+            <span className="block bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-300">
+              Clinical Nutrition Partner
+            </span>
+          </h1>
+
+          <p
+            style={{ animationDelay: '0.1s' }}
+            className="animate-fade-up mx-auto mt-6 max-w-2xl text-lg text-muted"
+          >
+            DietechAI delivers personalized medicine for nutrition: precision diet therapy,
+            patient-specific counseling, and evidence-based guidance for clinical practice.
+          </p>
+
+          <div
+            style={{ animationDelay: '0.15s' }}
+            className="animate-fade-up mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row"
+          >
+            <Button size="lg" onClick={handleGetStarted} loading={isLoading}>
+              Get Started Free
+              <ArrowRight size={18} />
+            </Button>
+            <Link href="/public-chat">
+              <Button size="lg" variant="outline">
+                Try Now
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Nutrition-Focused Features
-            </h2>
-            <p className="text-slate-600 max-w-xl mx-auto">
-              Tools for precision nutrition and clinical dietetics
-            </p>
-          </motion.div>
+      {/* Features */}
+      <section className="border-t border-border bg-surface py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="animate-fade-up mx-auto mb-14 max-w-xl text-center">
+            <h2 className="font-display text-3xl font-bold md:text-4xl">Nutrition-Focused Features</h2>
+            <p className="mt-3 text-muted">Tools for precision nutrition and clinical dietetics.</p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {features.map((feature, index) => (
-              <motion.div
+              <div
                 key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-slate-50 p-6 rounded-xl border border-slate-200 hover:border-blue-300 transition-colors group"
+                style={{ animationDelay: `${index * 0.08}s` }}
+                className="group animate-fade-up rounded-2xl border border-border bg-background p-6 shadow-soft transition-all hover:border-primary/40 hover:shadow-lift"
               >
-                <div className={`w-12 h-12 bg-gradient-to-r ${feature.gradient} rounded-lg flex items-center justify-center text-xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  {feature.icon}
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-soft transition-transform group-hover:scale-105">
+                  <feature.icon size={22} />
                 </div>
-                <h3 className="font-semibold text-slate-900 mb-2 text-lg">
-                  {feature.title}
-                </h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </motion.div>
+                <h3 className="text-lg font-semibold">{feature.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{feature.description}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-50 border-t border-slate-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-6">
-            <div className="w-6 h-6 rounded overflow-hidden flex items-center justify-center bg-white">
+      <footer className="border-t border-border bg-background py-12">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
+          <div className="mb-5 flex items-center justify-center gap-2">
+            <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded bg-white">
               <Image src="/dietech.png" alt="DietechAI" width={24} height={24} />
             </div>
-            <span className="font-bold text-lg text-slate-800">
-              DietechAI
-            </span>
+            <span className="font-display text-lg font-semibold">DietechAI</span>
           </div>
-          <p className="text-slate-600 text-sm mb-6 max-w-md mx-auto">
+          <p className="mx-auto mb-6 max-w-md text-sm text-muted">
             AI-powered clinical nutrition support for healthcare professionals and dietitians.
           </p>
-          <div className="flex flex-wrap justify-center gap-4 text-xs text-slate-500">
-            <a href="#" className="hover:text-blue-600 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">Terms</a>
-            <a href="#" className="hover:text-blue-600 transition-colors">Contact</a>
+          <div className="flex flex-wrap justify-center gap-5 text-xs text-subtle">
+            <a href="#" className="transition-colors hover:text-primary">Privacy</a>
+            <a href="#" className="transition-colors hover:text-primary">Terms</a>
+            <a href="#" className="transition-colors hover:text-primary">Contact</a>
           </div>
         </div>
       </footer>

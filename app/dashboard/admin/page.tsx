@@ -1,8 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Users, BookOpen, CheckCircle2, Upload, MessageSquare, LogOut } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { AppNavbar } from '@/components/app-navbar';
+import { cn } from '@/lib/utils';
 
 interface User {
   id: number;
@@ -92,7 +96,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    if (file.size > 50 * 1024 * 1024) { // 50MB limit
+    if (file.size > 50 * 1024 * 1024) {
       alert('File size must be less than 50MB');
       return;
     }
@@ -108,7 +112,6 @@ export default function AdminDashboard() {
       });
 
       if (response.ok) {
-        const data = await response.json();
         alert('Textbook uploaded successfully!');
         loadTextbooks();
       } else {
@@ -119,7 +122,6 @@ export default function AdminDashboard() {
       alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
-      // Reset file input
       event.target.value = '';
     }
   };
@@ -128,13 +130,8 @@ export default function AdminDashboard() {
     try {
       const response = await fetch('/api/admin/users', {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          isActive: !currentStatus,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, isActive: !currentStatus }),
       });
 
       if (response.ok) {
@@ -154,195 +151,137 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="flex min-h-[100dvh] items-center justify-center bg-background">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading Admin Dashboard...</p>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="text-muted">Loading admin dashboard…</p>
         </div>
       </div>
     );
   }
 
+  const stats = [
+    { label: 'Total Users', value: users.length, icon: Users },
+    { label: 'Textbooks', value: textbooks.length, icon: BookOpen },
+    { label: 'Processed', value: textbooks.filter((t) => t.is_processed).length, icon: CheckCircle2 },
+  ];
+
+  const badge = (active: boolean) =>
+    cn(
+      'inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold',
+      active
+        ? 'bg-success-surface text-success border border-success-border'
+        : 'bg-danger-surface text-danger border border-danger-border'
+    );
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg overflow-hidden bg-white flex items-center justify-center">
-                <Image src="/dietech.png" alt="DietechAI" width={32} height={32} />
-              </div>
-              <span className="font-bold text-xl text-slate-800">
-                DietechAI Admin
-              </span>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <span className="text-slate-600">Welcome, {user?.full_name}</span>
-              <button 
-                onClick={() => router.push('/chat')}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-              >
-                Go to Chat
-              </button>
-              <button 
-                onClick={handleLogout}
-                className="bg-slate-600 text-white px-4 py-2 rounded-lg hover:bg-slate-700 transition-colors text-sm"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-[100dvh] bg-background text-foreground">
+      <AppNavbar title="DietechAI Admin">
+        <span className="mr-1 hidden text-sm text-muted sm:inline">Welcome, {user?.full_name}</span>
+        <Button size="sm" variant="secondary" onClick={() => router.push('/chat')}>
+          <MessageSquare size={16} />
+          <span className="hidden sm:inline">Go to Chat</span>
+        </Button>
+        <Button size="sm" variant="ghost" onClick={handleLogout}>
+          <LogOut size={16} />
+          <span className="hidden sm:inline">Logout</span>
+        </Button>
+      </AppNavbar>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                <span className="text-blue-600 text-xl">👥</span>
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {/* Stats */}
+        <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {stats.map((s, i) => (
+            <Card
+              key={s.label}
+              style={{ animationDelay: `${i * 0.08}s` }}
+              className="animate-fade-up flex items-center gap-4 p-6"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <s.icon size={22} />
               </div>
               <div>
-                <p className="text-sm text-slate-600">Total Users</p>
-                <p className="text-2xl font-bold text-slate-900">{users.length}</p>
+                <p className="text-sm text-muted">{s.label}</p>
+                <p className="text-2xl font-bold text-foreground">{s.value}</p>
               </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
-                <span className="text-green-600 text-xl">📚</span>
-              </div>
-              <div>
-                <p className="text-sm text-slate-600">Textbooks</p>
-                <p className="text-2xl font-bold text-slate-900">{textbooks.length}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <div className="flex items-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
-                <span className="text-purple-600 text-xl">✅</span>
-              </div>
-              <div>
-                <p className="text-sm text-slate-600">Processed</p>
-                <p className="text-2xl font-bold text-slate-900">
-                  {textbooks.filter(t => t.is_processed).length}
-                </p>
-              </div>
-            </div>
-          </div>
+            </Card>
+          ))}
         </div>
 
-        {/* Tabs */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-6">
-          <div className="border-b border-slate-200">
-            <nav className="flex -mb-px">
+        {/* Tabs + tables */}
+        <Card className="overflow-hidden">
+          <div className="flex border-b border-border">
+            {[
+              { key: 'users', label: 'Users Management' },
+              { key: 'textbooks', label: 'Textbook Management' },
+            ].map((tab) => (
               <button
-                onClick={() => setActiveTab('users')}
-                className={`py-4 px-6 border-b-2 font-medium text-sm ${
-                  activeTab === 'users'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-                }`}
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                className={cn(
+                  'cursor-pointer border-b-2 px-6 py-4 text-sm font-medium transition-colors',
+                  activeTab === tab.key
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted hover:text-foreground'
+                )}
               >
-                Users Management
+                {tab.label}
               </button>
-              <button
-                onClick={() => setActiveTab('textbooks')}
-                className={`py-4 px-6 border-b-2 font-medium text-sm ${
-                  activeTab === 'textbooks'
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-                }`}
-              >
-                Textbook Management
-              </button>
-            </nav>
+            ))}
           </div>
 
           <div className="p-6">
             {activeTab === 'users' && (
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-semibold text-slate-900">Users List</h3>
-                  <span className="text-sm text-slate-600">
-                    {users.filter(u => u.is_active).length} active users
+                <div className="mb-5 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Users List</h3>
+                  <span className="text-sm text-muted">
+                    {users.filter((u) => u.is_active).length} active users
                   </span>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-slate-200">
+                <div className="scrollbar-slim overflow-x-auto">
+                  <table className="min-w-full text-sm">
                     <thead>
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          User
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Type
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Specialization
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Joined
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Actions
-                        </th>
+                      <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-subtle">
+                        <th className="px-4 py-3 font-medium">User</th>
+                        <th className="px-4 py-3 font-medium">Type</th>
+                        <th className="px-4 py-3 font-medium">Specialization</th>
+                        <th className="px-4 py-3 font-medium">Joined</th>
+                        <th className="px-4 py-3 font-medium">Status</th>
+                        <th className="px-4 py-3 font-medium">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-slate-200">
-                      {users.map((user) => (
-                        <tr key={user.id} className="hover:bg-slate-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div>
-                              <div className="text-sm font-medium text-slate-900">
-                                {user.full_name}
-                              </div>
-                              <div className="text-sm text-slate-500">
-                                {user.email}
-                              </div>
-                            </div>
+                    <tbody>
+                      {users.map((u) => (
+                        <tr key={u.id} className="border-b border-border/60 transition-colors hover:bg-elevated/50">
+                          <td className="px-4 py-3">
+                            <div className="font-medium text-foreground">{u.full_name}</div>
+                            <div className="text-xs text-subtle">{u.email}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                              {user.user_type}
+                          <td className="px-4 py-3">
+                            <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+                              {u.user_type}
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                            {user.specialization || '-'}
+                          <td className="px-4 py-3 text-muted">{u.specialization || '—'}</td>
+                          <td className="px-4 py-3 text-muted">
+                            {new Date(u.created_at).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                            {new Date(user.created_at).toLocaleDateString()}
+                          <td className="px-4 py-3">
+                            <span className={badge(u.is_active)}>{u.is_active ? 'Active' : 'Inactive'}</span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              user.is_active 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-red-100 text-red-800'
-                            }`}>
-                              {user.is_active ? 'Active' : 'Inactive'}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <td className="px-4 py-3">
                             <button
-                              onClick={() => toggleUserStatus(user.id, user.is_active)}
-                              className={`px-3 py-1 rounded text-xs ${
-                                user.is_active
-                                  ? 'bg-red-100 text-red-700 hover:bg-red-200'
-                                  : 'bg-green-100 text-green-700 hover:bg-green-200'
-                              } transition-colors`}
+                              onClick={() => toggleUserStatus(u.id, u.is_active)}
+                              className={cn(
+                                'cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium transition-colors',
+                                u.is_active
+                                  ? 'bg-danger-surface text-danger hover:opacity-80'
+                                  : 'bg-success-surface text-success hover:opacity-80'
+                              )}
                             >
-                              {user.is_active ? 'Deactivate' : 'Activate'}
+                              {u.is_active ? 'Deactivate' : 'Activate'}
                             </button>
                           </td>
                         </tr>
@@ -355,64 +294,54 @@ export default function AdminDashboard() {
 
             {activeTab === 'textbooks' && (
               <div>
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="text-lg font-semibold text-slate-900">Textbooks</h3>
-                  <div>
-                    <label className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm cursor-pointer">
-                      {uploading ? 'Uploading...' : 'Upload Textbook'}
-                      <input
-                        type="file"
-                        accept=".pdf"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                        disabled={uploading}
-                      />
-                    </label>
-                  </div>
+                <div className="mb-5 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Textbooks</h3>
+                  <label className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2 text-sm font-medium text-white shadow-soft transition-all hover:from-emerald-700 hover:to-teal-700 hover:shadow-lift dark:from-emerald-500 dark:to-teal-500">
+                    <Upload size={16} />
+                    {uploading ? 'Uploading…' : 'Upload Textbook'}
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-slate-200">
+                <div className="scrollbar-slim overflow-x-auto">
+                  <table className="min-w-full text-sm">
                     <thead>
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Textbook
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Size
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Uploaded
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                          Status
-                        </th>
+                      <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-subtle">
+                        <th className="px-4 py-3 font-medium">Textbook</th>
+                        <th className="px-4 py-3 font-medium">Size</th>
+                        <th className="px-4 py-3 font-medium">Uploaded</th>
+                        <th className="px-4 py-3 font-medium">Status</th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-slate-200">
-                      {textbooks.map((textbook) => (
-                        <tr key={textbook.id} className="hover:bg-slate-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm font-medium text-slate-900">
-                              {textbook.title}
-                            </div>
-                            <div className="text-sm text-slate-500">
-                              {textbook.filename}
-                            </div>
+                    <tbody>
+                      {textbooks.map((t) => (
+                        <tr key={t.id} className="border-b border-border/60 transition-colors hover:bg-elevated/50">
+                          <td className="px-4 py-3">
+                            <div className="font-medium text-foreground">{t.title}</div>
+                            <div className="text-xs text-subtle">{t.filename}</div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                            {(textbook.file_size / (1024 * 1024)).toFixed(2)} MB
+                          <td className="px-4 py-3 text-muted">
+                            {(t.file_size / (1024 * 1024)).toFixed(2)} MB
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                            {new Date(textbook.upload_date).toLocaleDateString()}
+                          <td className="px-4 py-3 text-muted">
+                            {new Date(t.upload_date).toLocaleDateString()}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                              textbook.is_processed 
-                                ? 'bg-green-100 text-green-800' 
-                                : 'bg-yellow-100 text-yellow-800'
-                            }`}>
-                              {textbook.is_processed ? 'Processed' : 'Pending'}
+                          <td className="px-4 py-3">
+                            <span
+                              className={cn(
+                                'inline-flex rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                                t.is_processed
+                                  ? 'border border-success-border bg-success-surface text-success'
+                                  : 'border border-amber-300/60 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300'
+                              )}
+                            >
+                              {t.is_processed ? 'Processed' : 'Pending'}
                             </span>
                           </td>
                         </tr>
@@ -422,18 +351,18 @@ export default function AdminDashboard() {
                 </div>
 
                 {textbooks.length === 0 && (
-                  <div className="text-center py-12">
-                    <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <span className="text-slate-400 text-2xl">📚</span>
+                  <div className="py-12 text-center">
+                    <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-elevated text-subtle">
+                      <BookOpen size={30} />
                     </div>
-                    <h3 className="text-lg font-medium text-slate-900 mb-2">No textbooks uploaded</h3>
-                    <p className="text-slate-600 mb-4">Upload your first medical textbook to get started.</p>
+                    <h3 className="mb-1 text-lg font-medium text-foreground">No textbooks uploaded</h3>
+                    <p className="text-muted">Upload your first medical textbook to get started.</p>
                   </div>
                 )}
               </div>
             )}
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );
